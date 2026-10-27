@@ -10,9 +10,9 @@ const revalidate = (tag: string, context: Record<string, unknown>) => {
 }
 
 export const revalidateCollection =
-  (tag: string): CollectionAfterChangeHook & CollectionAfterDeleteHook =>
+  (...tags: string[]): CollectionAfterChangeHook & CollectionAfterDeleteHook =>
   ({ doc, req: { context } }) => {
-    revalidate(tag, context)
+    for (const tag of tags) revalidate(tag, context)
     return doc
   }
 

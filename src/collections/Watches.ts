@@ -10,7 +10,9 @@ export const Watches: CollectionConfig = {
   slug: 'watches',
   admin: {
     useAsTitle: 'title',
+    group: 'Shop',
     defaultColumns: ['title', 'reference', 'availability', 'featured', '_status'],
+    listSearchableFields: ['title', 'reference'],
   },
   access: {
     create: authenticated,

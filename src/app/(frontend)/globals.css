@@ -3098,6 +3098,39 @@
     }
   }
 
+  /* ── Text pages ──────────────────────────────────────────────── */
+  /* Privacy, terms and the like: one column at a reading measure. */
+  .text-page {
+    padding-block: 64px 96px;
+  }
+
+  .text-page > * {
+    max-width: 68ch;
+  }
+
+  .text-page h1 {
+    font: 400 clamp(40px, 10vw, 64px) / 1 var(--font-serif);
+    letter-spacing: -0.025em;
+  }
+
+  .text-page-intro {
+    margin-top: 20px;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+  }
+
+  .text-page h2 {
+    margin-block: 48px 12px;
+    font: 500 26px / 1.2 var(--font-serif);
+  }
+
+  .text-page section p {
+    margin-top: 12px;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
   @keyframes letter-rise {
     from {
       translate: 0 110%;

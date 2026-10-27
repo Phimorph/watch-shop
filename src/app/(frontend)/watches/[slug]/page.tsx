@@ -1,17 +1,22 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
 
 import { MediaImage } from '@/components/media-image'
 import { availabilityLabel, WatchCard } from '@/components/watch-card'
 import { WatchSpecs } from '@/components/watch-specs'
 import { getSettings, getWatch, getWatches, mediaSrc, whatsappHref } from '@/lib/queries'
 
-/** Published watches are prerendered at build; new ones are rendered on first visit, then cached. */
+/** Allowed to block: nothing can show until the slug's document is read. */
+export const instant = false
+
+/**
+ * Published watches are prerendered at build; new ones are rendered on first visit, then
+ * cached. Cache Components needs at least one sample, so an empty shop samples a 404.
+ */
 export async function generateStaticParams() {
   const watches = await getWatches({})
-  return watches.map(({ slug }) => ({ slug }))
+  return watches.length ? watches.map(({ slug }) => ({ slug })) : [{ slug: '_' }]
 }
 
 export async function generateMetadata({ params }: PageProps<'/watches/[slug]'>): Promise<Metadata> {
@@ -26,15 +31,7 @@ export async function generateMetadata({ params }: PageProps<'/watches/[slug]'>)
   }
 }
 
-export default function WatchPage({ params }: PageProps<'/watches/[slug]'>) {
-  return (
-    <Suspense fallback={<div className="min-h-svh" />}>
-      <WatchDetail params={params} />
-    </Suspense>
-  )
-}
-
-async function WatchDetail({ params }: Pick<PageProps<'/watches/[slug]'>, 'params'>) {
+export default async function WatchPage({ params }: PageProps<'/watches/[slug]'>) {
   const { slug } = await params
   const [watch, settings] = await Promise.all([getWatch(slug), getSettings()])
   if (!watch) notFound()

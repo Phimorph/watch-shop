@@ -111,6 +111,42 @@ export async function getBrands() {
   return values.map(({ brand }) => brand)
 }
 
+/** Slugs of the published text pages, for prerendering. */
+export async function getPageSlugs() {
+  'use cache'
+  cacheLife('max')
+  cacheTag('pages')
+
+  const payload = await getPayload({ config })
+  const { docs } = await payload.find({
+    collection: 'pages',
+    overrideAccess: false,
+    select: { slug: true },
+    depth: 0,
+    pagination: false,
+  })
+
+  return docs.map(({ slug }) => slug).filter((slug): slug is string => Boolean(slug))
+}
+
+/** A published text page by its slug, or null. */
+export async function getPage(slug: string) {
+  'use cache'
+  cacheLife('max')
+  cacheTag('pages')
+
+  const payload = await getPayload({ config })
+  const { docs } = await payload.find({
+    collection: 'pages',
+    overrideAccess: false,
+    where: { slug: { equals: slug } },
+    depth: 0,
+    limit: 1,
+  })
+
+  return docs[0] ?? null
+}
+
 export async function getHome() {
   'use cache'
   cacheLife('max')

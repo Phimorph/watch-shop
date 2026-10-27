@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     watches: Watch;
     media: Media;
+    pages: Page;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -80,6 +81,7 @@ export interface Config {
   collectionsSelect: {
     watches: WatchesSelect<false> | WatchesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -175,6 +177,9 @@ export interface Watch {
  */
 export interface Media {
   id: string;
+  /**
+   * Describe the photograph for people who cannot see it, e.g. "Rolex Explorer II, black dial".
+   */
   alt: string;
   createdBy?: {
     relationTo: 'users';
@@ -241,6 +246,42 @@ export interface User {
   collection: 'users';
 }
 /**
+ * Text pages such as privacy or terms. Link one from Settings → Footer → Legal links as /its-slug.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: string;
+  title: string;
+  slug: string;
+  /**
+   * Also the description search engines show.
+   */
+  intro?: string | null;
+  sections?:
+    | {
+        heading?: string | null;
+        /**
+         * A blank line starts a new paragraph.
+         */
+        body: string;
+        id?: string | null;
+      }[]
+    | null;
+  createdBy?: {
+    relationTo: 'users';
+    value: string | User;
+  } | null;
+  updatedBy?: {
+    relationTo: 'users';
+    value: string | User;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -271,6 +312,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: string | Page;
       } | null)
     | ({
         relationTo: 'users';
@@ -399,6 +444,27 @@ export interface MediaSelect<T extends boolean = true> {
       };
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  intro?: T;
+  sections?:
+    | T
+    | {
+        heading?: T;
+        body?: T;
+        id?: T;
+      };
+  createdBy?: T;
+  updatedBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -709,6 +775,9 @@ export interface Setting {
       }[]
     | null;
   servicesNote?: string | null;
+  /**
+   * Create the page under Site → Pages, then link it as /its-slug.
+   */
   legalLinks?:
     | {
         label: string;
@@ -983,7 +1052,7 @@ export interface CollectionsWidget {
 export interface CollectionQueryWidget {
   data?: {
     title?: string | null;
-    relatedCollection: 'watches' | 'media' | 'users';
+    relatedCollection: 'watches' | 'media' | 'pages' | 'users';
     where?:
       | {
           [k: string]: unknown;
@@ -1005,7 +1074,7 @@ export interface CollectionQueryWidget {
  */
 export interface ActivityWidget {
   data?: {
-    excludedCollections?: ('watches' | 'media' | 'users')[] | null;
+    excludedCollections?: ('watches' | 'media' | 'pages' | 'users')[] | null;
   };
   width: 'small' | 'medium' | 'large' | 'x-large' | 'full';
 }

@@ -15,6 +15,13 @@ const intro: Field = { name: 'intro', type: 'textarea', admin: { rows: 2 } }
 /** Every word and picture on the home page, one tab per section, in page order. */
 export const Home: GlobalConfig = {
   slug: 'home',
+  admin: {
+    group: 'Site',
+  },
+  // Keeps the last 25 saves, so a mistake can be restored from the Versions tab.
+  versions: {
+    max: 25,
+  },
   access: {
     read: () => true,
     update: authenticated,

@@ -5,6 +5,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Media } from './collections/Media'
+import { Pages } from './collections/Pages'
 import { Users } from './collections/Users'
 import { Watches } from './collections/Watches'
 import { Home } from './globals/Home'
@@ -24,7 +25,7 @@ export default buildConfig({
       titleSuffix: ' · watch.me',
     },
   },
-  collections: [Watches, Media, Users],
+  collections: [Watches, Media, Pages, Users],
   globals: [Home, Settings],
   secret: process.env.PAYLOAD_SECRET || '',
   serverURL,

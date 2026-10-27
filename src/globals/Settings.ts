@@ -12,10 +12,11 @@ const internalHref: Field = {
   validate: (value: string | null | undefined) => /^\/(?!\/)/.test(value ?? '') || 'Start with a single /.',
 }
 
-const links = (name: string, maxRows = 8): Field => ({
+const links = (name: string, maxRows = 8, description?: string): Field => ({
   name,
   type: 'array',
   maxRows,
+  admin: { description },
   fields: [{ type: 'row', fields: [{ name: 'label', type: 'text', required: true }, internalHref] }],
 })
 
@@ -26,6 +27,13 @@ function httpsUrl(value: string | null | undefined) {
 /** Site-wide content: contact, navigation, footer, WhatsApp messages, watch page notes and SEO. */
 export const Settings: GlobalConfig = {
   slug: 'settings',
+  admin: {
+    group: 'Site',
+  },
+  // Keeps the last 25 saves, so a mistake can be restored from the Versions tab.
+  versions: {
+    max: 25,
+  },
   access: {
     read: () => true,
     update: authenticated,
@@ -108,7 +116,7 @@ export const Settings: GlobalConfig = {
             },
             links('services', 5),
             { name: 'servicesNote', type: 'text' },
-            links('legalLinks', 3),
+            links('legalLinks', 3, 'Create the page under Site → Pages, then link it as /its-slug.'),
             { name: 'copyright', type: 'text' },
             { name: 'footerNote', type: 'text' },
           ],
