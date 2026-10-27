@@ -115,6 +115,23 @@ export const Settings: GlobalConfig = {
                 { name: 'cardPriceLabel', type: 'text', required: true, admin: { description: 'Opens WhatsApp with the price message.' } },
               ],
             },
+            {
+              type: 'row',
+              fields: [
+                { name: 'referenceLabel', type: 'text', required: true, admin: { description: 'Before the reference number.' } },
+                { name: 'boxLabel', type: 'text', required: true },
+                { name: 'papersLabel', type: 'text', required: true },
+                { name: 'boxPapersLabel', type: 'text', required: true, admin: { description: 'When both are included.' } },
+              ],
+            },
+            {
+              type: 'row',
+              fields: [
+                { name: 'availableLabel', type: 'text', required: true },
+                { name: 'soldLabel', type: 'text', required: true },
+                { name: 'unavailableLabel', type: 'text', required: true },
+              ],
+            },
           ],
         },
         {

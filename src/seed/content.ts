@@ -15,6 +15,7 @@ export const home = (media: Media): Omit<Home, 'id'> => ({
     questionPrompt: 'Have a question?',
     questionLabel: 'Talk to us.',
     caption: 'Dhaka · Bangladesh',
+    watchesLabel: 'Featured watches',
   },
   brands: {
     note: 'Brand names are editorial references only; no official affiliation is implied',
@@ -96,6 +97,13 @@ export const settings = (): Omit<Setting, 'id'> => ({
   contactLabel: 'Contact us',
   cardDetailsLabel: 'View Details',
   cardPriceLabel: 'Ask for Price',
+  referenceLabel: 'Ref.',
+  boxLabel: 'Box',
+  papersLabel: 'Papers',
+  boxPapersLabel: 'Box & papers',
+  availableLabel: 'Available',
+  soldLabel: 'Sold',
+  unavailableLabel: 'Unavailable',
   navigation: [
     { label: 'Collection', href: '/#collection' },
     { label: 'Sold Watches', href: '/#sold' },

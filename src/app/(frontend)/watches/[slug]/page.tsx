@@ -72,7 +72,7 @@ async function WatchDetail({ params }: Pick<PageProps<'/watches/[slug]'>, 'param
           <p className="mt-6 max-w-[46ch] text-lead">{watch.description}</p>
 
           <p className="mt-8 font-medium">
-            {available ? 'Available to see in the showroom' : availabilityLabel[watch.availability]}
+            {available ? 'Available to see in the showroom' : availabilityLabel(settings, watch.availability)}
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-4">
             {available ? (

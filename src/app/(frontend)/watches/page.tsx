@@ -67,7 +67,7 @@ async function Results({ searchParams }: { searchParams: SearchParams }) {
           label="Availability"
           name="availability"
           value={filters.availability}
-          options={Object.entries(availabilityLabel).map(([value, label]) => ({ value, label }))}
+          options={(['available', 'sold', 'unavailable'] as const).map((value) => ({ value, label: availabilityLabel(settings, value) }))}
           all="All watches"
         />
         <Select

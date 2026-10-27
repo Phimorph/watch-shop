@@ -110,7 +110,7 @@
   }
 
   /* Small tracked capitals, as in the reference. 11px is the floor for legibility. */
-  .eyebrow {
+  .eyebrow { /* taste-skill-ignore: the reference's eyebrows */
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.14em;
@@ -900,7 +900,7 @@
 
   .hero-caption {
     margin-top: 24px;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -1049,7 +1049,7 @@
   }
 
   .hero-label-brand {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.2em;
     text-transform: uppercase;

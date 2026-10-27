@@ -2,15 +2,30 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 
 import { whatsappHref, type WatchWithImages } from '@/lib/queries'
-import type { Setting } from '@/payload-types'
+import type { Setting, Watch } from '@/payload-types'
 
 import { MediaImage } from './media-image'
 
-export const availabilityLabel = { available: 'Available', sold: 'Sold', unavailable: 'Unavailable' } as const
+type AvailabilityLabels = Pick<Setting, 'availableLabel' | 'soldLabel' | 'unavailableLabel'>
+
+/** The editor's word for a watch's availability, from the settings. */
+export const availabilityLabel = (settings: AvailabilityLabels, availability: Watch['availability']) =>
+  settings[`${availability}Label`]
 
 type Props = {
   watch: WatchWithImages
-  settings: Pick<Setting, 'whatsapp' | 'messagePrice' | 'cardDetailsLabel' | 'cardPriceLabel'>
+  settings: AvailabilityLabels &
+    Pick<
+      Setting,
+      | 'whatsapp'
+      | 'messagePrice'
+      | 'cardDetailsLabel'
+      | 'cardPriceLabel'
+      | 'referenceLabel'
+      | 'boxLabel'
+      | 'papersLabel'
+      | 'boxPapersLabel'
+    >
 }
 
 /**
@@ -21,7 +36,13 @@ type Props = {
 export function WatchCard({ watch, settings }: Props) {
   const href = `/watches/${watch.slug}`
   const available = watch.availability === 'available'
-  const set = watch.box && watch.papers ? 'Box & papers' : watch.box ? 'Box' : watch.papers ? 'Papers' : null
+  const set = watch.box && watch.papers
+    ? settings.boxPapersLabel
+    : watch.box
+      ? settings.boxLabel
+      : watch.papers
+        ? settings.papersLabel
+        : null
   const summary = watch.description?.split('.')[0]
 
   return (
@@ -32,11 +53,13 @@ export function WatchCard({ watch, settings }: Props) {
           alt=""
           sizes="(min-width: 1051px) 25vw, (min-width: 371px) 50vw, 100vw"
         />
-        {!available && <span className="watch-card-status">{availabilityLabel[watch.availability]}</span>}
+        {!available && <span className="watch-card-status">{availabilityLabel(settings, watch.availability)}</span>}
       </Link>
       <div className="watch-card-meta">
         <span>{watch.brand}</span>
-        {watch.reference && <span>Ref. {watch.reference}</span>}
+        {watch.reference && <span>
+            {settings.referenceLabel} {watch.reference}
+          </span>}
       </div>
       <h3>
         <Link href={href} className="watch-card-model">
@@ -61,7 +84,7 @@ export function WatchCard({ watch, settings }: Props) {
               <ArrowUpRight size={14} strokeWidth={1.5} aria-hidden="true" />
             </a>
           ) : (
-            <span>{availabilityLabel[watch.availability]}</span>
+            <span>{availabilityLabel(settings, watch.availability)}</span>
           )}
         </div>
       </div>

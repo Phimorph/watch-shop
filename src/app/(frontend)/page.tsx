@@ -24,7 +24,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Hero hero={home.hero} chat={chat} watches={featured} />
+      <Hero hero={home.hero} chat={chat} watches={featured} referenceLabel={settings.referenceLabel} />
       <Marquee brands={home.brands} names={brands} />
       <Featured catalog={home.catalog} watches={collection} total={available.length} settings={settings} />
       <Trust trust={home.trust} />

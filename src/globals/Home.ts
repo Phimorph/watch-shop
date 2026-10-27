@@ -48,6 +48,12 @@ export const Home: GlobalConfig = {
               ],
             },
             { name: 'caption', type: 'text', admin: { description: 'Small text under the ring, for example the city.' } },
+            {
+              name: 'watchesLabel',
+              type: 'text',
+              required: true,
+              admin: { description: 'Names the featured watches for screen readers.' },
+            },
           ],
         },
         {

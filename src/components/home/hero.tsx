@@ -7,7 +7,7 @@ import { MediaImage } from '@/components/media-image'
 import { asMedia, type WatchWithImages } from '@/lib/queries'
 import type { Home } from '@/payload-types'
 
-type Props = { hero: Home['hero']; chat: string; watches: WatchWithImages[] }
+type Props = { hero: Home['hero']; chat: string; watches: WatchWithImages[]; referenceLabel: string }
 
 /** The stage shows four watches a lap, one per quarter of the minute track. */
 const SLOTS = 4
@@ -18,7 +18,7 @@ const TICKS = Array.from({ length: 60 }, (_, index) => index)
  * watch at a time. A lume pip sweeps the track; at each quarter the window turns over to the
  * next watch. All of it is CSS animation, so the hero ships no JavaScript.
  */
-export function Hero({ hero, chat, watches }: Props) {
+export function Hero({ hero, chat, watches, referenceLabel }: Props) {
   const image = asMedia(hero.image)
   // Fewer than four featured watches repeat to fill the quarters; the repeats are decoration.
   const slots = watches.length ? Array.from({ length: SLOTS }, (_, index) => watches[index % watches.length]) : []
@@ -63,10 +63,10 @@ export function Hero({ hero, chat, watches }: Props) {
               ))}
               <circle className="hero-track-pip" cx="50" cy="1.6" r="1.1" />
             </svg>
-            <ul className="hero-watches" aria-label="Featured watches">
+            <ul className="hero-watches" aria-label={hero.watchesLabel}>
               {slots.map((watch, index) => {
                 const repeat = index >= watches.length
-                const meta = [watch.reference && `Ref. ${watch.reference}`, watch.year].filter(Boolean).join(' · ')
+                const meta = [watch.reference && `${referenceLabel} ${watch.reference}`, watch.year].filter(Boolean).join(' · ')
                 return (
                   <li key={index} style={{ '--i': index } as CSSProperties} aria-hidden={repeat || undefined}>
                     <Link href={`/watches/${watch.slug}`} tabIndex={repeat ? -1 : undefined}>

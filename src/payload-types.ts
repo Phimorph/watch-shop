@@ -505,6 +505,10 @@ export interface Home {
      * Small text under the ring, for example the city.
      */
     caption?: string | null;
+    /**
+     * Names the featured watches for screen readers.
+     */
+    watchesLabel: string;
   };
   brands: {
     /**
@@ -713,6 +717,19 @@ export interface Setting {
    * Opens WhatsApp with the price message.
    */
   cardPriceLabel: string;
+  /**
+   * Before the reference number.
+   */
+  referenceLabel: string;
+  boxLabel: string;
+  papersLabel: string;
+  /**
+   * When both are included.
+   */
+  boxPapersLabel: string;
+  availableLabel: string;
+  soldLabel: string;
+  unavailableLabel: string;
   messageGeneral: string;
   messagePrice: string;
   messageViewing: string;
@@ -749,6 +766,7 @@ export interface HomeSelect<T extends boolean = true> {
         questionPrompt?: T;
         questionLabel?: T;
         caption?: T;
+        watchesLabel?: T;
       };
   brands?:
     | T
@@ -890,6 +908,13 @@ export interface SettingsSelect<T extends boolean = true> {
   reassuranceText?: T;
   cardDetailsLabel?: T;
   cardPriceLabel?: T;
+  referenceLabel?: T;
+  boxLabel?: T;
+  papersLabel?: T;
+  boxPapersLabel?: T;
+  availableLabel?: T;
+  soldLabel?: T;
+  unavailableLabel?: T;
   messageGeneral?: T;
   messagePrice?: T;
   messageViewing?: T;
