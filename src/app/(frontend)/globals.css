@@ -1974,7 +1974,8 @@
   }
 
   .trust-eyebrow, /* taste-skill-ignore: from the reference */
-  .sold-eyebrow {
+  .sold-eyebrow,
+  .story-eyebrow {
     margin-bottom: 16px;
     font-size: 11px;
     font-weight: 600;
@@ -2323,6 +2324,187 @@
 
       .sold-mark {
         animation-range: entry 25% cover 52%;
+      }
+    }
+  }
+
+  /* ── Story ───────────────────────────────────────────────────── */
+  /* The reference's darker stone band: the photograph, its caption laid on it, beside the
+   * story, the founder under a rule and the link. On a phone the photograph comes first. */
+  .story {
+    padding-block: 80px;
+    background: #dedbd1;
+  }
+
+  .story-layout {
+    display: grid;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .story-photo {
+    position: relative;
+    height: clamp(300px, 85vw, 440px);
+    overflow: hidden;
+    background: #cfcbc0;
+  }
+
+  .story-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.72);
+  }
+
+  .story-photo figcaption {
+    position: absolute;
+    left: 18px;
+    bottom: 16px;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #f0ede5;
+  }
+
+  .story-eyebrow {
+    margin-bottom: 16px;
+  }
+
+  /* The heading's box clips it, so it can rise from behind its lower edge. */
+  .story-title {
+    overflow: hidden;
+    padding-bottom: 0.08em;
+    font: 400 clamp(40px, 12vw, 50px) / 0.99 var(--font-serif);
+    letter-spacing: -0.025em;
+  }
+
+  .story-title > span {
+    display: block;
+  }
+
+  .story-body {
+    max-width: 46ch;
+    margin-block: 24px 28px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #55534c;
+  }
+
+  .story-founder {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-top: 20px;
+    border-top: 1px solid rgb(25 25 25 / 0.17); /* taste-skill-ignore: from the reference */
+  }
+
+  .story-initial {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 42px;
+    aspect-ratio: 1;
+    border: 1px solid rgb(25 25 25 / 0.25); /* taste-skill-ignore: the reference's monogram */
+    border-radius: 50%;
+    font: italic 400 20px / 1 var(--font-serif);
+  }
+
+  .story-founder b {
+    display: block;
+    font: 500 19px / 1.2 var(--font-serif);
+  }
+
+  .story-founder small {
+    display: block;
+    margin-top: 3px;
+    font-size: 12px;
+    color: #6f6b64;
+  }
+
+  @media (min-width: 768px) {
+    .story {
+      padding-block: 112px;
+    }
+
+    .story-layout {
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 7%;
+    }
+
+    .story-photo {
+      height: clamp(440px, 44vw, 600px);
+    }
+
+    .story-copy {
+      max-width: 480px;
+    }
+
+    .story-title {
+      font-size: clamp(48px, 5vw, 64px);
+    }
+  }
+
+  @media (min-width: 1051px) {
+    .story-layout {
+      gap: 10%;
+    }
+  }
+
+  /* Motion. The photograph is uncovered from below as it settles, then drifts a little
+   * slower than the page; the heading rises from behind its edge, the words follow, the
+   * founder's rule wipes across and the link rises last. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .story-photo,
+      .story-photo img,
+      .story-photo figcaption,
+      .story-copy > * {
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+        animation-timeline: view();
+      }
+
+      .story-photo {
+        animation-name: photo-uncover;
+        animation-range: entry 0% cover 40%;
+      }
+
+      .story-photo img {
+        animation-name: photo-settle, photo-drift;
+        animation-timeline: view(), view();
+        animation-range:
+          entry 0% cover 50%,
+          cover 0% cover 100%;
+      }
+
+      .story-photo figcaption {
+        animation-name: rise;
+        animation-range: entry 60% cover 45%;
+      }
+
+      .story-copy > * {
+        animation-name: rise;
+        animation-range: entry 0% cover 35%;
+      }
+
+      .story-title > span {
+        animation: title-rise linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 40%;
+      }
+
+      .story-title {
+        animation: none;
+      }
+
+      .story-founder {
+        animation-name: note-draw;
+        animation-range: entry 20% cover 40%;
+      }
+
+      .story-link {
+        animation-range: entry 30% cover 45%;
       }
     }
   }

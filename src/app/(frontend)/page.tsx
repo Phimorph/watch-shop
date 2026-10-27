@@ -2,6 +2,7 @@ import { Featured } from '@/components/home/featured'
 import { Hero } from '@/components/home/hero'
 import { Marquee } from '@/components/home/marquee'
 import { Sold } from '@/components/home/sold'
+import { Story } from '@/components/home/story'
 import { Trust } from '@/components/home/trust'
 import { getBrands, getFeaturedWatches, getHome, getSettings, getWatches, whatsappHref } from '@/lib/queries'
 
@@ -29,6 +30,7 @@ export default async function HomePage() {
       <Featured catalog={home.catalog} watches={collection} total={available.length} settings={settings} />
       <Trust trust={home.trust} />
       <Sold sold={home.sold} watches={sold} settings={settings} />
+      <Story story={home.story} chat={chat} />
     </>
   )
 }
