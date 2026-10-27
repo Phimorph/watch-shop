@@ -1,0 +1,60 @@
+{
+  "name": "watch-shop",
+  "version": "1.0.0",
+  "description": "Showcase site for watch.me, pre-owned luxury watches in Dhaka. Next.js + Payload CMS.",
+  "type": "module",
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" payload build",
+    "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
+    "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/index.ts",
+    "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
+    "typecheck": "next typegen && tsc --noEmit",
+    "format": "oxfmt",
+    "test": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test",
+    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
+    "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload"
+  },
+  "dependencies": {
+    "@payloadcms/db-mongodb": "4.0.0-beta.4",
+    "@payloadcms/next": "4.0.0-beta.4",
+    "@payloadcms/transformer-sharp": "4.0.0-beta.4",
+    "@payloadcms/ui": "4.0.0-beta.4",
+    "@tailwindcss/postcss": "^4.3.3",
+    "clsx": "^2.1.1",
+    "cross-env": "10.1.0",
+    "dotenv": "16.4.7",
+    "graphql": "^16.8.1",
+    "lucide-react": "^1.61.0",
+    "next": "16.4.2",
+    "payload": "4.0.0-beta.4",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/node": "24.12.3",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "^9.16.0",
+    "eslint-config-next": "16.4.2",
+    "oxfmt": "^0.73.0",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3"
+  },
+  "engines": {
+    "node": ">=24.22.1",
+    "pnpm": "^9 || ^10 || ^11"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp",
+      "esbuild",
+      "unrs-resolver"
+    ]
+  }
+}
