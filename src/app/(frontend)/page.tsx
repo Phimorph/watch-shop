@@ -1,3 +1,4 @@
+import { Faq } from '@/components/home/faq'
 import { Featured } from '@/components/home/featured'
 import { Hero } from '@/components/home/hero'
 import { Marquee } from '@/components/home/marquee'
@@ -33,6 +34,7 @@ export default async function HomePage() {
       <Sold sold={home.sold} watches={sold} settings={settings} />
       <Story story={home.story} chat={chat} />
       <Reviews reviews={home.reviews} />
+      <Faq faq={home.faq} />
     </>
   )
 }

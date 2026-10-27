@@ -1976,7 +1976,8 @@
   .trust-eyebrow, /* taste-skill-ignore: from the reference */
   .sold-eyebrow,
   .story-eyebrow,
-  .reviews-eyebrow {
+  .reviews-eyebrow,
+  .faq-eyebrow {
     margin-bottom: 16px;
     font-size: 11px;
     font-weight: 600;
@@ -2619,8 +2620,9 @@
     }
   }
 
-  /* Motion. The heading rises from behind its edge; the brass rule draws down, the
-   * quotation mark drops onto it and the words rise after. */
+  /* Motion. The heading rises from behind its edge. Each quotation keeps its own timeline:
+   * the brass rule draws down, the mark drops onto it, the words ink in one after another
+   * as the quotation is read up the screen, and the name follows. */
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       .reviews-title > span {
@@ -2636,23 +2638,35 @@
         animation-range: entry 0% cover 35%;
       }
 
+      .review {
+        view-timeline: --review;
+      }
+
       .review::before {
         animation: rule-down linear both;
-        animation-timeline: view();
-        animation-range: entry 10% cover 40%;
+        animation-timeline: --review;
+        animation-range: entry 0% cover 30%;
       }
 
       .review-mark {
         animation: mark-drop linear both;
-        animation-timeline: view();
-        animation-range: entry 30% cover 40%;
+        animation-timeline: --review;
+        animation-range: entry 60% cover 25%;
       }
 
-      .review > :not(.review-mark),
-      .review blockquote p {
+      /* Each word's window opens a step after the last, across a quarter of the scroll. */
+      .review p span {
+        animation: ink linear both;
+        animation-timeline: --review;
+        animation-range:
+          cover calc(18% + 24% * var(--w) / var(--words))
+          cover calc(26% + 24% * var(--w) / var(--words));
+      }
+
+      .review figcaption {
         animation: rise linear both;
-        animation-timeline: view();
-        animation-range: entry 40% cover 45%;
+        animation-timeline: --review;
+        animation-range: cover 40% cover 52%;
       }
     }
   }
@@ -2667,6 +2681,209 @@
     from {
       opacity: 0;
       translate: 0 -24px;
+    }
+  }
+
+  @keyframes ink {
+    from {
+      color: #cdc6b8;
+    }
+  }
+
+  /* ── FAQ ─────────────────────────────────────────────────────── */
+  /* The reference's list of questions beside the heading, which stays in view on desktop
+   * while the answers open. Hairlines between the questions, chevrons in brass. */
+  .faq {
+    padding-block: 80px;
+    background: #f0eee8;
+  }
+
+  .faq-layout {
+    display: grid;
+    gap: 40px;
+  }
+
+  /* The heading's box clips it, so it can rise from behind its lower edge. */
+  .faq-title {
+    overflow: hidden;
+    padding-bottom: 0.08em;
+    font: 400 clamp(36px, 11vw, 44px) / 0.99 var(--font-serif);
+    letter-spacing: -0.025em;
+  }
+
+  .faq-title > span {
+    display: block;
+  }
+
+  .faq-intro {
+    max-width: 34ch;
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #77736d;
+  }
+
+  .faq-list {
+    border-bottom: 1px solid #d8d3c8; /* taste-skill-ignore: the reference's hairlines */
+    interpolate-size: allow-keywords;
+  }
+
+  .faq-item summary {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 64px;
+    padding-block: 16px;
+    font-size: 15px;
+    line-height: 1.45;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* The rule above each question is drawn, not a border, so it can run across. */
+  .faq-item summary::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px; /* taste-skill-ignore: the reference's hairlines */
+    background: #d8d3c8;
+    transform-origin: left;
+  }
+
+  .faq-item summary span {
+    transition: color 0.3s;
+  }
+
+  .faq-item summary svg {
+    flex: none;
+    color: #8b7858;
+    transition: rotate 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .faq-item[open] summary svg {
+    rotate: 180deg;
+  }
+
+  .faq-item summary:focus-visible {
+    outline: 1px solid #8b7858;
+    outline-offset: -1px;
+  }
+
+  @media (hover: hover) {
+    .faq-item summary:hover span {
+      color: #8b7858;
+    }
+  }
+
+  .faq-item p {
+    max-width: 60ch;
+    padding: 0 40px 24px 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #6f6a62;
+  }
+
+  @media (min-width: 768px) {
+    .faq {
+      padding-block: 112px;
+    }
+
+    .faq-title {
+      font-size: clamp(48px, 5vw, 64px);
+    }
+
+    .faq-intro,
+    .faq-item summary,
+    .faq-item p {
+      font-size: 16px;
+    }
+
+    .faq-item summary {
+      min-height: 68px;
+    }
+  }
+
+  @media (min-width: 1051px) {
+    .faq-layout {
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 10%;
+    }
+
+    .faq-head {
+      position: sticky;
+      top: calc(var(--header-height) + 48px);
+      align-self: start;
+    }
+  }
+
+  /* Motion. The heading rises from behind its edge; each question's rule runs across as it
+   * scrolls in and the question rises under it. An answer opens to its height and settles
+   * in, the chevron turning over. */
+  @media (prefers-reduced-motion: no-preference) {
+    .faq-item::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition:
+        block-size 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+        content-visibility 0.45s allow-discrete;
+    }
+
+    .faq-item[open]::details-content {
+      block-size: auto;
+    }
+
+    .faq-item[open] p {
+      animation: answer-in 0.5s 0.08s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+
+    @supports (animation-timeline: view()) {
+      .faq-title > span {
+        animation: title-rise linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 40%;
+      }
+
+      .faq-eyebrow,
+      .faq-intro {
+        animation: rise linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 35%;
+      }
+
+      .faq-item summary {
+        view-timeline: --question;
+      }
+
+      .faq-item summary::before {
+        animation: rule-across linear both;
+        animation-timeline: --question;
+        animation-range: entry 0% cover 35%;
+      }
+
+      .faq-item summary > * {
+        animation: rise linear both;
+        animation-timeline: --question;
+        animation-range: entry 50% cover 40%;
+      }
+    }
+  }
+
+  @keyframes rule-across {
+    from {
+      scale: 0 1;
+    }
+  }
+
+  @keyframes answer-in {
+    from {
+      opacity: 0;
+      translate: 0 -8px;
     }
   }
 }
