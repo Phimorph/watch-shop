@@ -1,0 +1,2156 @@
+@import 'tailwindcss';
+
+/*
+ * Colour roles use shadcn token names so `npx shadcn add` components inherit the brand.
+ * Values follow the reference design; the greys are darkened where the reference fell
+ * below WCAG AA contrast on paper.
+ */
+:root {
+  --background: #f7f5f0;
+  --foreground: #191919;
+  --muted: #eeece5;
+  --muted-foreground: #6b675f;
+  --secondary: #f1efe9;
+  --secondary-foreground: #191919;
+  --primary: #191919;
+  --primary-foreground: #f7f5f0;
+  --accent: #7c6438;
+  --accent-foreground: #f7f5f0;
+  --brass: #a58a5a;
+  --inverse: #22221f;
+  --inverse-foreground: #eae7df;
+  --inverse-muted: #c5c2bb;
+  --inverse-accent: #d2bd91;
+  --border: #e6e1d8;
+  --input: #d9d4ca;
+  --ring: #7c6438;
+  --radius: 0;
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --header-height: 63px;
+  --page-width: min(1320px, calc(100% - 36px));
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-height: 76px;
+    --page-width: min(1320px, calc(100% - 64px));
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-brass: var(--brass);
+  --color-inverse: var(--inverse);
+  --color-inverse-foreground: var(--inverse-foreground);
+  --color-inverse-muted: var(--inverse-muted);
+  --color-inverse-accent: var(--inverse-accent);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-cormorant), Georgia, serif;
+
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.45;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 1.5;
+  --text-heading: clamp(2rem, 1.4rem + 2vw, 3rem);
+  --text-heading--line-height: 1;
+  --text-heading--letter-spacing: -0.02em;
+  --text-display: clamp(2.75rem, 1.6rem + 4.4vw, 5.25rem);
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.035em;
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-height) + 16px);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-body text-foreground antialiased;
+    font-family: var(--font-sans);
+  }
+
+  ::selection {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-4 outline-ring;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-serif font-medium text-balance;
+  }
+}
+
+@layer components {
+  .page-wrap {
+    width: var(--page-width);
+    margin-inline: auto;
+  }
+
+  /* Small tracked capitals, as in the reference. 11px is the floor for legibility. */
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .button {
+    @apply inline-flex min-h-12 items-center justify-center bg-primary px-6 text-small font-medium text-primary-foreground transition-[background-color,translate] duration-200 ease-out-quart hover:bg-accent active:translate-y-px;
+  }
+
+  .text-link {
+    @apply underline decoration-1 underline-offset-[0.3em] transition-colors duration-200 hover:text-accent;
+  }
+
+  .page-x {
+    @apply px-5 md:px-8 lg:px-12;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ── Utility bar ─────────────────────────────────────────────── */
+  .utility {
+    background: var(--inverse);
+    color: var(--inverse-foreground);
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Below 1024px the bar holds only the messages, centred. From 1024px the phone and address join them. */
+  .utility-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    min-height: 36px;
+    white-space: nowrap;
+  }
+
+  /* Two tones only: the messages in champagne, the contact details in cream. */
+  .utility-notes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    font-weight: 500;
+    color: var(--inverse-accent);
+  }
+
+  .utility-notes > li {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /*
+   * Below 1280px the messages share one spot and take turns, 3s each, as on bobswatches.com.
+   * Pure CSS: every message stacks in one grid cell and fades on its own delay. With reduced
+   * motion only the first one shows.
+   */
+  @media (max-width: 1279px) {
+    .utility-notes {
+      display: grid;
+      grid-template-columns: minmax(0, auto);
+      justify-items: center;
+    }
+
+    .utility-notes > li {
+      grid-area: 1 / 1;
+      max-width: 100%;
+    }
+
+    .utility-notes > li:not(:first-child) {
+      visibility: hidden;
+    }
+  }
+
+  @media (max-width: 1279px) and (prefers-reduced-motion: no-preference) {
+    .utility-notes > li:not(:only-child) {
+      visibility: visible;
+      opacity: 0;
+      animation: utility-rotate 9s ease infinite;
+    }
+
+    /* The first message shows at once instead of fading in on load. */
+    .utility-notes > li:first-child:not(:only-child) {
+      animation:
+        utility-rotate 9s ease infinite,
+        utility-hold 3s ease;
+    }
+
+    .utility-notes > li:nth-child(2) {
+      animation-delay: 3s;
+    }
+
+    .utility-notes > li:nth-child(3) {
+      animation-delay: 6s;
+    }
+
+    .utility-notes[data-count='2'] > li {
+      animation-name: utility-rotate-2;
+      animation-duration: 6s;
+    }
+
+    .utility-notes[data-count='2'] > li:first-child {
+      animation-name: utility-rotate-2, utility-hold;
+      animation-duration: 6s, 3s;
+    }
+
+    .utility-notes:hover > li {
+      animation-play-state: paused;
+    }
+  }
+
+  @keyframes utility-rotate {
+    0%, 38.33%, 100% { opacity: 0; }
+    5%, 33.33% { opacity: 1; }
+  }
+
+  @keyframes utility-rotate-2 {
+    0%, 55%, 100% { opacity: 0; }
+    7.5%, 50% { opacity: 1; }
+  }
+
+  @keyframes utility-hold {
+    0%, 100% { opacity: 1; }
+  }
+
+  @media (max-width: 767px) {
+    .utility {
+      font-size: 13px;
+    }
+  }
+
+  .utility-contact {
+    display: none;
+    min-width: 0;
+    font-style: normal;
+  }
+
+  @media (min-width: 1024px) {
+    .utility-inner {
+      justify-content: space-between;
+    }
+
+    .utility-notes {
+      justify-items: start;
+    }
+
+    .utility-contact {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  /* A short vertical divider between items in a row, as on bobswatches.com. */
+  .utility-notes > li + li::before {
+    content: '';
+    display: inline-block;
+    width: 1px;
+    height: 14px;
+    margin: 0 12px;
+    background: rgb(234 231 223 / 0.22); /* taste-skill-ignore: the user asked for Bob's dividers */
+    vertical-align: middle;
+  }
+
+  @media (max-width: 1279px) {
+    .utility-notes > li + li::before {
+      content: none;
+    }
+  }
+
+  /* The contact links draw the same underline as the main links, in champagne. */
+  .utility-contact {
+    gap: 25px;
+  }
+
+  .utility-contact > a {
+    position: relative;
+    padding-block: 11px;
+    transition: color 0.3s var(--ease-out);
+  }
+
+  .utility-contact > a + a::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -13px;
+    width: 1px;
+    height: 14px;
+    translate: 0 -50%;
+    background: rgb(234 231 223 / 0.22); /* taste-skill-ignore: the user asked for Bob's dividers */
+  }
+
+  .utility-contact > a::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 6px;
+    height: 1px; /* taste-skill-ignore: the animated hover underline */
+    background: var(--inverse-accent);
+    scale: 0 1;
+    transform-origin: right;
+    transition: scale 0.45s var(--ease-out);
+  }
+
+  .utility-contact > a:focus-visible {
+    color: var(--inverse-accent);
+  }
+
+  .utility-contact > a:focus-visible::after {
+    scale: 1 1;
+    transform-origin: left;
+  }
+
+  @media (hover: hover) {
+    .utility-contact > a:hover {
+      color: var(--inverse-accent);
+    }
+
+    .utility-contact > a:hover::after {
+      scale: 1 1;
+      transform-origin: left;
+    }
+  }
+
+  /* ── Header ──────────────────────────────────────────────────── */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    anchor-name: --site-header;
+    border-bottom: 1px solid transparent; /* taste-skill-ignore: scrolled-state border, from the reference */
+    background: rgb(247 245 240 / 0.97);
+  }
+
+  /* Wordmark left, links in the true centre, actions right. */
+  .header-inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    height: var(--header-height);
+  }
+
+  .wordmark {
+    justify-self: start;
+    padding-block: 7px;
+    font-family: var(--font-serif);
+    font-size: 31px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.065em;
+    white-space: nowrap;
+  }
+
+  .wordmark span {
+    color: var(--brass);
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  /* A brass underline draws in from the left on hover and focus, and leaves to the right. */
+  .nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #45443f;
+    transition: color 0.3s var(--ease-out);
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 12px;
+    height: 1px; /* taste-skill-ignore: the animated hover underline */
+    background: var(--brass);
+    scale: 0 1;
+    transform-origin: right;
+    transition: scale 0.45s var(--ease-out);
+  }
+
+  .nav-link:focus-visible {
+    color: var(--foreground);
+  }
+
+  .nav-link:focus-visible::after {
+    scale: 1 1;
+    transform-origin: left;
+  }
+
+  @media (hover: hover) {
+    .nav-link:hover {
+      color: var(--foreground);
+    }
+
+    .nav-link:hover::after {
+      scale: 1 1;
+      transform-origin: left;
+    }
+  }
+
+  .header-actions {
+    grid-column: 3;
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .icon-button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    color: var(--foreground);
+    cursor: pointer;
+    transition:
+      color 0.2s,
+      scale 0.2s var(--ease-out);
+  }
+
+  .icon-button:active {
+    scale: 0.92;
+  }
+
+  @media (hover: hover) {
+    .icon-button:hover {
+      color: var(--accent);
+    }
+  }
+
+  /* Each toggle shows a close icon while its panel is open. */
+  .icon-button .icon-close,
+  .site-header:has(#site-search:popover-open) .search-toggle .icon-open {
+    display: none;
+  }
+
+  .site-header:has(#site-search:popover-open) .search-toggle .icon-close {
+    display: block;
+  }
+
+  /* Two lines; the shorter one reaches full length on hover and they cross into an X when open. */
+  .burger {
+    position: relative;
+    width: 22px;
+    height: 8px;
+  }
+
+  .burger::before,
+  .burger::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background: currentColor;
+    transition:
+      translate 0.35s var(--ease-out),
+      rotate 0.35s var(--ease-out),
+      width 0.35s var(--ease-out);
+  }
+
+  .burger::before {
+    top: 0;
+  }
+
+  .burger::after {
+    right: 0;
+    bottom: 0;
+    left: auto;
+    width: 60%;
+  }
+
+  @media (hover: hover) {
+    .menu-toggle:hover .burger::after {
+      width: 100%;
+    }
+  }
+
+  /* The two lines cross into an X while the menu is open. */
+  :root:has(.mobile-menu:popover-open) .burger::before {
+    translate: 0 3.25px;
+    rotate: 45deg;
+  }
+
+  :root:has(.mobile-menu:popover-open) .burger::after {
+    translate: 0 -3.25px;
+    rotate: -45deg;
+    width: 100%;
+  }
+
+  /* ── Search ── */
+  .search-form {
+    display: flex;
+    gap: 8px;
+  }
+
+  .header-search {
+    display: none;
+  }
+
+  .search-field {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    height: 40px;
+    padding-inline: 14px;
+    border: 1px solid var(--input); /* taste-skill-ignore: a form field */
+    background: rgb(255 255 255 / 0.6);
+    color: var(--muted-foreground);
+    cursor: text;
+    transition:
+      border-color 0.2s,
+      background-color 0.2s,
+      box-shadow 0.2s;
+  }
+
+  .search-field:focus-within {
+    border-color: var(--accent);
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--accent); /* taste-skill-ignore: focus ring */
+  }
+
+  .search-field input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    background: transparent;
+    font-size: 14px;
+    color: var(--foreground);
+    outline: none;
+  }
+
+  .search-field input::placeholder {
+    color: var(--muted-foreground);
+  }
+
+  /*
+   * The search panel and mobile menu are native popovers anchored under the header.
+   * They fade and drop in, following MDN's popover transition pattern.
+   */
+  .header-panel {
+    position: fixed;
+    inset: auto 0 auto 0;
+    top: var(--header-height);
+    width: 100%;
+    margin: 0;
+    border: 0;
+    border-bottom: 1px solid var(--border); /* taste-skill-ignore: edge of a floating panel */
+    background: var(--background);
+    color: var(--foreground);
+    box-shadow: 0 10px 18px rgb(20 20 18 / 0.06); /* taste-skill-ignore: floating panel */
+    opacity: 0;
+    translate: 0 -8px;
+    transition:
+      opacity 0.25s var(--ease-out),
+      translate 0.25s var(--ease-out),
+      overlay 0.25s allow-discrete,
+      display 0.25s allow-discrete;
+  }
+
+  .header-panel:popover-open {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  @starting-style {
+    .header-panel:popover-open {
+      opacity: 0;
+      translate: 0 -8px;
+    }
+  }
+
+  @supports (top: anchor(bottom)) {
+    .header-panel {
+      position-anchor: --site-header;
+      top: anchor(bottom);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .header-panel {
+      translate: none;
+      transition: none;
+    }
+  }
+
+  .search-panel {
+    padding-block: 16px 20px;
+  }
+
+  .search-panel .search-field {
+    height: 48px;
+  }
+
+  .search-submit {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .search-submit svg {
+    transition: translate 0.3s var(--ease-out);
+  }
+
+  @media (hover: hover) {
+    .search-submit:hover {
+      background: var(--accent);
+    }
+
+    .search-submit:hover svg {
+      translate: 3px 0;
+    }
+  }
+
+  /* 16px keeps iOS Safari from zooming in when the field takes focus. */
+  .search-panel input {
+    font-size: 16px;
+  }
+
+  /*
+   * Mobile menu. Where anchor positioning works it hangs under the header and fills the rest
+   * of the screen; elsewhere it covers the screen and shows its own top row. It unrolls like a
+   * blind (clip-path) and rolls back up on close; only on opening do the links rise in turn.
+   */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--background);
+    color: var(--foreground);
+    clip-path: inset(0 0 100% 0);
+    transition:
+      clip-path 0.4s var(--ease-out),
+      overlay 0.4s allow-discrete,
+      display 0.4s allow-discrete;
+  }
+
+  /* Same layout while it rolls up; `display` only flips to none once the transition ends. */
+  .mobile-menu:not(:popover-open) {
+    display: none;
+  }
+
+  .mobile-menu:popover-open {
+    clip-path: inset(0);
+    transition-duration: 0.55s;
+  }
+
+  @starting-style {
+    .mobile-menu:popover-open {
+      clip-path: inset(0 0 100% 0);
+    }
+  }
+
+  html:has(.mobile-menu:popover-open) {
+    overflow: hidden;
+  }
+
+  .mobile-menu-top {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-height);
+  }
+
+  .mobile-menu-top .icon-button {
+    margin-right: -10px;
+  }
+
+  @supports (top: anchor(bottom)) {
+    .mobile-menu {
+      position-anchor: --site-header;
+      top: anchor(bottom);
+    }
+
+    .mobile-menu-top {
+      display: none;
+    }
+  }
+
+  .mobile-menu-links {
+    display: flex;
+    flex-direction: column;
+    padding-block: 20px 32px;
+  }
+
+  .mobile-menu-links a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 56px;
+    font-family: var(--font-serif);
+    font-size: clamp(28px, min(9vw, 6.5dvh), 64px);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    transition: color 0.2s;
+  }
+
+  .mobile-menu:popover-open .mobile-menu-links a {
+    transition:
+      color 0.2s,
+      opacity 0.5s var(--ease-out) calc(120ms + var(--i) * 50ms),
+      translate 0.5s var(--ease-out) calc(120ms + var(--i) * 50ms);
+  }
+
+  @starting-style {
+    .mobile-menu:popover-open .mobile-menu-links a {
+      opacity: 0;
+      translate: 0 16px;
+    }
+  }
+
+  .mobile-menu-links svg {
+    flex: none;
+    color: var(--brass);
+    transition: translate 0.3s var(--ease-out);
+  }
+
+  .mobile-menu-links a:active {
+    color: var(--accent);
+  }
+
+  @media (hover: hover) {
+    .mobile-menu-links a:hover {
+      color: var(--accent);
+    }
+
+    .mobile-menu-links a:hover svg {
+      translate: 3px -3px;
+    }
+  }
+
+  /* One clear action at thumb height, the phone number under it. */
+  .mobile-menu-contact {
+    display: grid;
+    gap: 6px;
+    margin-top: auto;
+    padding-block: 24px max(24px, env(safe-area-inset-bottom));
+    font-style: normal;
+  }
+
+  .mobile-menu-contact .button {
+    gap: 10px;
+    min-height: 52px;
+  }
+
+  .mobile-menu-phone {
+    display: grid;
+    place-items: center;
+    min-height: 44px;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    color: var(--muted-foreground);
+    transition: color 0.2s;
+  }
+
+  .mobile-menu-phone:hover {
+    color: var(--foreground);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-menu,
+    .mobile-menu:popover-open,
+    .mobile-menu:popover-open .mobile-menu-links a {
+      transition: none;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .wordmark {
+      font-size: 34px;
+      padding-block: 5px;
+    }
+  }
+
+  /* Desktop: the links and a real search field join the bar; the menu and search icon go. */
+  @media (min-width: 1024px) {
+    .desktop-nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(24px, 2.4vw, 36px);
+    }
+
+    .header-search {
+      display: flex;
+      width: clamp(244px, 20vw, 300px);
+    }
+
+    .search-toggle,
+    .search-panel,
+    .menu-toggle,
+    .mobile-menu {
+      display: none;
+    }
+  }
+
+  /* ── Hero ────────────────────────────────────────────────────── */
+  /* The stage is a watch face: a minute track around a round window holding one featured
+   * watch at a time. Phones stack the words over the face; from 1024px they sit side by side. */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #0e0f0d;
+    color: #f6f2e9;
+  }
+
+  .hero-image {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.16;
+  }
+
+  /* One pool of light on the face; the rest falls away to black. */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(circle at 50% 78%, rgb(255 244 222 / 0.12), transparent 45%), /* taste-skill-ignore: the stage light on the watch */
+      linear-gradient(180deg, rgb(14 15 13 / 0.75), rgb(14 15 13 / 0.45) 50%, rgb(14 15 13 / 0.85)); /* taste-skill-ignore: a neutral scrim over the backdrop photo */
+  }
+
+  .hero-content {
+    display: grid;
+    justify-items: center;
+    gap: 56px;
+    padding-block: 44px 48px;
+    text-align: center;
+  }
+
+  .hero-text {
+    display: grid;
+    justify-items: center;
+  }
+
+  .hero-text .eyebrow { /* taste-skill-ignore: the editor's eyebrow, from the reference */
+    margin-bottom: 16px;
+    color: var(--inverse-accent);
+  }
+
+  .hero h1 {
+    font: 400 clamp(34px, 9.6vw, 56px) / 0.98 var(--font-serif);
+    letter-spacing: -0.03em;
+  }
+
+  .hero h1 em {
+    color: var(--inverse-accent);
+  }
+
+  .hero-caption {
+    margin-top: 24px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #a7a296;
+  }
+
+  .hero-copy {
+    max-width: 36ch;
+    margin-top: 22px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #d9d5cc;
+    white-space: pre-line;
+  }
+
+  .hero-caption + .hero-copy {
+    margin-top: 8px;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 28px;
+  }
+
+  .button-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 23px;
+    height: 47px;
+    padding: 0 19px;
+    background: #f4f0e6;
+    color: #171815;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background 0.2s;
+  }
+
+  .button-light:hover {
+    background: #d9cbaa;
+  }
+
+  .hero-question {
+    font-size: 13px;
+    color: #dbd8d0;
+  }
+
+  .hero-question span {
+    margin-left: 4px;
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* --d is the window's diameter; the minute track rings it 9% further out. */
+  .hero-stage {
+    --d: min(80vw, 380px);
+    --lap: 24s;
+    position: relative;
+    width: var(--d);
+    margin-top: calc(var(--d) * 0.09);
+  }
+
+  .hero-track {
+    position: absolute;
+    top: calc(var(--d) * -0.09);
+    left: calc(var(--d) * -0.09);
+    width: calc(var(--d) * 1.18);
+    height: calc(var(--d) * 1.18);
+    overflow: visible;
+    stroke: rgb(234 231 223 / 0.4);
+    stroke-width: 0.3;
+  }
+
+  .hero-track-quarter {
+    stroke: var(--inverse-accent);
+    stroke-width: 0.7;
+  }
+
+  .hero-track-pip {
+    fill: #f4e6c4;
+    stroke: none;
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+  }
+
+  .hero-watches {
+    display: grid;
+  }
+
+  .hero-watches li {
+    grid-area: 1 / 1;
+    --delay: calc(var(--i) * var(--lap) / 4 - var(--lap));
+  }
+
+  /* Without motion the first watch stays on the face. */
+  .hero-watches li:not(:first-child) {
+    visibility: hidden;
+  }
+
+  /* The label clears the minute track below the window. */
+  .hero-watches a {
+    display: grid;
+    justify-items: center;
+    gap: calc(var(--d) * 0.09 + 18px);
+  }
+
+  .hero-window {
+    position: relative;
+    display: block;
+    width: var(--d);
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 50%;
+    background: #e9e3d6;
+    box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.9); /* taste-skill-ignore: the watch sits in its light */
+  }
+
+  .hero-window img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    scale: 1.12;
+    transition: scale 0.8s var(--ease-out);
+  }
+
+  /* The domed crystal: a glint at the top left, the edge falling into shadow. */
+  .hero-window::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+      linear-gradient(135deg, rgb(255 255 255 / 0.2), transparent 34%), /* taste-skill-ignore: glare on the crystal */
+      radial-gradient(circle, transparent 60%, rgb(20 18 14 / 0.35)); /* taste-skill-ignore: the dome's edge */
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1); /* taste-skill-ignore: the crystal's rim */
+  }
+
+  .hero-label {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+  }
+
+  .hero-label-brand {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--inverse-accent);
+  }
+
+  .hero-label-model {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font: 500 26px / 1.1 var(--font-serif);
+    transition: color 0.2s;
+  }
+
+  .hero-label-model svg {
+    color: var(--inverse-accent);
+    transition: translate 0.3s var(--ease-out);
+  }
+
+  .hero-label-meta {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    color: #a7a296;
+  }
+
+  .hero-watches a:hover .hero-label-model {
+    color: var(--inverse-accent);
+  }
+
+  .hero-watches a:hover .hero-label-model svg {
+    translate: 2px -2px;
+  }
+
+  .hero-watches a:hover .hero-window img {
+    scale: 1.17;
+  }
+
+  .hero-watches a:focus-visible {
+    outline: none;
+  }
+
+  .hero-watches a:focus-visible .hero-window {
+    outline: 2px solid var(--inverse-accent);
+    outline-offset: 4px;
+  }
+
+  /* Each watch holds the face for a quarter of the lap. The pip sweeps the track; as it
+   * reaches the next quarter the window turns edge-on and the next watch turns in. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-watches li {
+      animation: hero-slot var(--lap) linear var(--delay) infinite;
+    }
+
+    .hero-window {
+      animation: hero-turn var(--lap) var(--delay) infinite;
+    }
+
+    .hero-label {
+      animation: hero-label var(--lap) var(--delay) infinite;
+    }
+
+    .hero-track-pip {
+      animation: hero-sweep var(--lap) linear infinite;
+    }
+
+    .hero-stage:has(:focus-visible) * {
+      animation-play-state: paused;
+    }
+
+    @media (hover: hover) {
+      .hero-stage:hover * {
+        animation-play-state: paused;
+      }
+    }
+
+    /* Scrolling away lays the face back, like a watch set down on a table. */
+    @supports (animation-timeline: scroll()) {
+      .hero-stage {
+        animation: hero-lay linear both;
+        animation-timeline: scroll(root block);
+        animation-range: 0 70svh;
+      }
+    }
+  }
+
+  @keyframes hero-slot {
+    0%,
+    25% {
+      visibility: visible;
+    }
+    25.01%,
+    100% {
+      visibility: hidden;
+    }
+  }
+
+  @keyframes hero-turn {
+    0% {
+      transform: perspective(1200px) rotateY(-90deg) scale(0.94);
+      animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
+    }
+    3%,
+    22% {
+      transform: perspective(1200px) rotateY(0deg);
+      animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.4);
+    }
+    25%,
+    100% {
+      transform: perspective(1200px) rotateY(90deg) scale(0.94);
+    }
+  }
+
+  @keyframes hero-label {
+    0% {
+      opacity: 0;
+      translate: 0 10px;
+    }
+    4%,
+    21% {
+      opacity: 1;
+      translate: 0 0;
+    }
+    24%,
+    100% {
+      opacity: 0;
+      translate: 0 -6px;
+    }
+  }
+
+  @keyframes hero-sweep {
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  @keyframes hero-lay {
+    to {
+      transform: perspective(1400px) rotateX(38deg) scale(0.9);
+      opacity: 0.5;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hero h1 {
+      font-size: clamp(52px, 7vw, 64px);
+    }
+
+    .hero-stage {
+      --d: min(56vw, 440px);
+    }
+
+    .hero-actions {
+      flex-direction: row;
+      gap: 28px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      min-height: calc(100svh - var(--header-height) - 36px);
+    }
+
+    .hero::before {
+      background:
+        radial-gradient(circle at 72% 50%, rgb(255 244 222 / 0.12), transparent 40%), /* taste-skill-ignore: the stage light on the watch */
+        linear-gradient(90deg, rgb(14 15 13 / 0.88), rgb(14 15 13 / 0.55) 55%, rgb(14 15 13 / 0.8)); /* taste-skill-ignore: a neutral scrim over the backdrop photo */
+    }
+
+    .hero-content {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      justify-items: start;
+      column-gap: clamp(40px, 6vw, 120px);
+      min-height: inherit;
+      padding-block: 48px;
+      text-align: left;
+    }
+
+    .hero-text {
+      justify-items: start;
+    }
+
+    .hero h1 {
+      font-size: clamp(52px, 4.9vw, 76px);
+    }
+
+    .hero-stage {
+      --d: clamp(320px, min(36vw, calc(100svh - var(--header-height) - 36px - 280px)), 540px);
+      margin-inline: calc(var(--d) * 0.09);
+    }
+  }
+
+  /* ── Brand strip ─────────────────────────────────────────────── */
+  /* After the reference: small tracked capitals on stone, brass points between them,
+   * drifting left. The track holds two equal runs and moves by one, so it loops. */
+  .marquee {
+    overflow: hidden;
+    border-bottom: 1px solid var(--border); /* taste-skill-ignore: from the reference */
+    background: #f1efe9;
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+  }
+
+  .marquee-track li {
+    display: flex;
+    align-items: center;
+  }
+
+  /* The brass point after each name, 38px either side (54px from 768px). */
+  .marquee-track li::after {
+    content: '·';
+    padding-inline: 19px;
+    color: var(--brass);
+  }
+
+  .marquee-track a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 58px;
+    padding-inline: 19px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: #56534d;
+    transition: color 0.25s;
+  }
+
+  .marquee-track a:hover,
+  .marquee-track a:focus-visible {
+    color: var(--foreground);
+  }
+
+  .marquee-track a:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: -14px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .marquee-track {
+      animation: marquee 36s linear infinite;
+    }
+
+    .marquee:hover .marquee-track,
+    .marquee:focus-within .marquee-track {
+      animation-play-state: paused;
+    }
+  }
+
+  /* Without motion the strip scrolls by hand and shows each brand once. */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .marquee-track [aria-hidden] {
+      display: none;
+    }
+  }
+
+  @keyframes marquee {
+    to {
+      translate: -50% 0;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .marquee-track a {
+      height: 72px;
+      padding-inline: 27px;
+      font-size: 11px;
+    }
+
+    .marquee-track li::after {
+      padding-inline: 27px;
+    }
+  }
+
+  /* ── Collection ──────────────────────────────────────────────── */
+  /* The reference's layout (heading row and link, the sample notice between two rules, four
+   * cards a row, the count with "load more") with type set large enough to read: nothing
+   * under 11px, captions at 12–14px. */
+  .collection {
+    padding-block: 80px;
+    counter-reset: shown;
+  }
+
+  .collection-head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 32px;
+    view-timeline-name: --collection-head;
+  }
+
+  /* The heading's own box clips it, so it can rise from behind its lower edge. */
+  .collection-title {
+    overflow: hidden;
+    padding-bottom: 0.08em;
+    font: 400 clamp(36px, 12.5vw, 44px) / 1 var(--font-serif);
+    letter-spacing: -0.03em;
+  }
+
+  .collection-title > span {
+    display: block;
+  }
+
+  .collection-intro {
+    max-width: 46ch;
+    margin-top: 14px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #77736d;
+  }
+
+  .collection-link {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 7px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .collection-link::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 1px; /* taste-skill-ignore: the reference's underlined link */
+    background: currentColor;
+  }
+
+  .collection-link svg {
+    transition: translate 0.35s var(--ease-out);
+  }
+
+  .collection-link:hover {
+    color: var(--accent);
+  }
+
+  .collection-link:hover svg {
+    translate: 2px -2px;
+  }
+
+  .collection-note {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 28px;
+    padding-block: 13px;
+    border-block: 1px solid var(--border); /* taste-skill-ignore: from the reference */
+    font-size: 13px;
+    color: #807d76;
+  }
+
+  .collection-note span:first-child {
+    color: #615c51;
+  }
+
+  .collection-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 44px 12px;
+  }
+
+  .collection-grid > li {
+    counter-increment: shown;
+  }
+
+  /* ── The card, here and on the watch pages ── */
+  .watch-card-photo {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1.06;
+    overflow: hidden;
+    background: #ece9e2;
+  }
+
+  .watch-card-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Hover: four fine corner marks close in on the photograph, like a loupe finding focus.
+   * Leaving reverses it at the same pace. */
+
+  .watch-card-photo::before {
+    --mark: rgb(25 25 25 / 0.7);
+    --len: 22px;
+    content: '';
+    position: absolute;
+    z-index: 1;
+    inset: 2px;
+    background: /* taste-skill-ignore: the loupe's corner marks */
+      linear-gradient(var(--mark), var(--mark)) top left / var(--len) 1px, /* taste-skill-ignore: a solid corner line, not a fade */
+      linear-gradient(var(--mark), var(--mark)) top left / 1px var(--len), /* taste-skill-ignore: a solid corner line, not a fade */
+      linear-gradient(var(--mark), var(--mark)) top right / var(--len) 1px, /* taste-skill-ignore: a solid corner line, not a fade */
+      linear-gradient(var(--mark), var(--mark)) top right / 1px var(--len), /* taste-skill-ignore: a solid corner line, not a fade */
+      linear-gradient(var(--mark), var(--mark)) bottom left / var(--len) 1px, /* taste-skill-ignore: a solid corner line, not a fade */
+      linear-gradient(var(--mark), var(--mark)) bottom left / 1px var(--len), /* taste-skill-ignore: a solid corner line, not a fade */
+      linear-gradient(var(--mark), var(--mark)) bottom right / var(--len) 1px, /* taste-skill-ignore: a solid corner line, not a fade */
+      linear-gradient(var(--mark), var(--mark)) bottom right / 1px var(--len); /* taste-skill-ignore: a solid corner line, not a fade */
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition:
+      inset 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.4s var(--ease-out);
+    pointer-events: none;
+  }
+
+  .watch-card:is(:hover, :focus-within) .watch-card-photo::before {
+    inset: 16px;
+    opacity: 1;
+  }
+
+  .watch-card-status {
+    position: absolute;
+    z-index: 2;
+    top: 28px;
+    left: 28px;
+    padding: 6px 9px;
+    background: #292a27;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #f8f5ef;
+  }
+
+  /* The card is a container, so its caption can arrange itself by its own width. */
+  .watch-card {
+    container-type: inline-size;
+  }
+
+  .watch-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 2px 8px;
+    margin-top: 16px;
+    font-size: 11px;
+    color: #89857e;
+  }
+
+  /* The maker in confident capitals; the reference in quieter figures. */
+  .watch-card-meta span:first-child {
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8d7a57;
+  }
+
+  .watch-card-meta span + span {
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .watch-card h3 {
+    margin-top: 6px;
+    font: 400 22px / 1.15 var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  /* The model's underline draws in from the left on hover. */
+  .watch-card-model {
+    padding-bottom: 3px;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; /* taste-skill-ignore: the drawn underline */
+    transition: background-size 0.6s var(--ease-out);
+  }
+
+  .watch-card:hover .watch-card-model,
+  .watch-card-model:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  .watch-card-summary {
+    display: none;
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #77736d;
+  }
+
+  .watch-card-foot {
+    margin-top: 14px;
+  }
+
+  /* Condition, then what comes with it after a quiet slash. */
+  .watch-card-condition {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 10px;
+    font-size: 13px;
+    color: #615c51;
+  }
+
+  .watch-card-condition span + span::before {
+    content: '/';
+    margin-right: 10px;
+    color: #c4bdb0;
+  }
+
+  /* One bar in two halves between hairlines: details on the left, the price on the right.
+   * Each half is a full 44px target; hovering one fills it with ink. A narrow card stacks
+   * the halves. */
+  .watch-card-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 16px;
+    border-block: 1px solid var(--border); /* taste-skill-ignore: the bar's hairlines */
+    font-size: 13px;
+  }
+
+  .watch-card-actions > * {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 44px;
+    padding-inline: 2px 10px;
+    white-space: nowrap;
+  }
+
+  .watch-card-actions > :last-child {
+    padding-inline: 12px 2px;
+    border-left: 1px solid var(--border); /* taste-skill-ignore: the bar's divider */
+  }
+
+  .watch-card-actions a {
+    color: var(--foreground);
+    transition:
+      background 0.35s var(--ease-out),
+      color 0.35s var(--ease-out),
+      padding 0.35s var(--ease-out);
+  }
+
+  .watch-card-actions a:first-child {
+    color: #615c51;
+  }
+
+  .watch-card-actions span {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #89857e;
+  }
+
+  .watch-card-actions svg {
+    flex-shrink: 0;
+    color: var(--brass);
+    transition:
+      translate 0.35s var(--ease-out),
+      color 0.35s;
+  }
+
+  .watch-card-actions a:hover {
+    padding-inline: 12px;
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  .watch-card-actions a:hover svg {
+    color: var(--inverse-accent);
+  }
+
+  .watch-card-actions a:first-child:hover svg {
+    translate: 3px 0;
+  }
+
+  .watch-card-actions a:last-child:hover svg {
+    translate: 2px -2px;
+  }
+
+  .watch-card-actions a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+
+  @container (max-width: 240px) {
+    .watch-card-actions {
+      grid-template-columns: 1fr;
+    }
+
+    .watch-card-actions > :last-child {
+      padding-inline: 2px 10px;
+      border-top: 1px solid var(--border); /* taste-skill-ignore: the bar's divider */
+      border-left: 0;
+    }
+  }
+
+  /* The count and "load more", under a rule as in the reference. */
+  .collection-foot {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 44px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border); /* taste-skill-ignore: from the reference */
+  }
+
+  .collection-count {
+    font-size: 13px;
+    color: #77736d;
+  }
+
+  .collection-count b {
+    font-weight: 500;
+    color: var(--foreground);
+  }
+
+  /* A CSS counter over the cards on screen keeps the count true after "load more". */
+  .collection-shown::before {
+    content: counter(shown);
+  }
+
+  .collection-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .collection-more svg {
+    transition: translate 0.35s var(--ease-out);
+  }
+
+  .collection-more:hover {
+    color: var(--accent);
+  }
+
+  .collection-more:hover svg {
+    translate: 2px 2px;
+  }
+
+  .collection-toggle:focus-visible ~ .collection-foot .collection-more {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .collection-later,
+  .collection-toggle:checked ~ .collection-foot .collection-more {
+    display: none;
+  }
+
+  .collection-toggle:checked ~ .collection-grid .collection-later {
+    display: block;
+  }
+
+  @media (min-width: 371px) {
+    .collection-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 40px 12px;
+    }
+
+    .collection-grid > li:nth-child(2n) {
+      --col: 1;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .collection {
+      padding-block: 112px 104px;
+    }
+
+    .collection-head {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 48px;
+      margin-bottom: 40px;
+    }
+
+    .collection-title {
+      font-size: clamp(52px, 5vw, 64px);
+    }
+
+    .collection-intro {
+      margin-top: 18px;
+      font-size: 16px;
+    }
+
+    .collection-link {
+      margin-bottom: 10px;
+    }
+
+    .collection-note {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .collection-grid {
+      gap: 56px 20px;
+    }
+
+    .watch-card-meta {
+      margin-top: 20px;
+    }
+
+    .watch-card h3 {
+      font-size: 26px;
+    }
+
+    .watch-card-summary {
+      display: block;
+    }
+
+    .watch-card-foot {
+      margin-top: 18px;
+    }
+
+    .collection-foot {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 56px;
+    }
+  }
+
+  @media (min-width: 1051px) {
+    .collection-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 64px 24px;
+    }
+
+    .collection-grid > li:nth-child(4n + 2) {
+      --col: 1;
+    }
+
+    .collection-grid > li:nth-child(4n + 3) {
+      --col: 2;
+    }
+
+    .collection-grid > li:nth-child(4n + 4) {
+      --col: 3;
+    }
+  }
+
+  /* Motion. The heading rises from behind its edge, the introduction and link follow and
+   * the notice's rules draw across. Each card's photograph is uncovered from below as it
+   * settles to size, columns further right a beat later, and its caption rises after.
+   * "Load more" brings the next cards in one after another. */
+  @media (prefers-reduced-motion: no-preference) {
+    .collection-link:hover::after {
+      animation: underline-redraw 0.7s var(--ease-out);
+    }
+
+    .collection-toggle:checked ~ .collection-grid .collection-later {
+      animation: card-arrive 0.9s var(--ease-out) calc(var(--i) * 110ms) both;
+    }
+
+    @supports (animation-timeline: view()) {
+      .collection-title > span,
+      .collection-intro,
+      .collection-link,
+      .collection-note,
+      .watch-card-photo,
+      .watch-card-photo img,
+      .watch-card > :not(.watch-card-photo) {
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+      }
+
+      .collection-title > span {
+        animation-name: title-rise;
+        animation-timeline: --collection-head;
+        animation-range: entry 0% cover 40%;
+      }
+
+      .collection-intro {
+        animation-name: rise;
+        animation-timeline: --collection-head;
+        animation-range: entry 15% cover 48%;
+      }
+
+      .collection-link {
+        animation-name: rise;
+        animation-timeline: --collection-head;
+        animation-range: entry 25% cover 52%;
+      }
+
+      .collection-note {
+        animation-name: note-draw;
+        animation-timeline: view();
+        animation-range: entry 0% cover 30%;
+      }
+
+      .collection-grid .watch-card-photo {
+        animation-name: photo-uncover;
+        animation-timeline: view();
+        animation-range: entry calc(var(--col, 0) * 6%) entry calc(80% + var(--col, 0) * 6%);
+      }
+
+      /* The photograph settles from a slight zoom, then drifts gently inside its frame for
+       * as long as it is on screen, a little slower than the page. */
+      .collection-grid .watch-card-photo img {
+        animation-name: photo-settle, photo-drift;
+        animation-timeline: view(), view();
+        animation-range:
+          entry calc(var(--col, 0) * 6%) cover calc(50% + var(--col, 0) * 6%),
+          cover 0% cover 100%;
+      }
+
+      /* Each card's bar draws across from the left as the card arrives. */
+      .collection-grid .watch-card-actions {
+        animation-name: note-draw;
+        animation-timeline: view();
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+        animation-range: entry calc(var(--col, 0) * 25px) entry calc(140px + var(--col, 0) * 25px);
+      }
+
+      .collection-grid .watch-card > :not(.watch-card-photo) {
+        animation-name: rise;
+        animation-timeline: view();
+        animation-range: entry calc(var(--col, 0) * 10%) entry calc(100% + var(--col, 0) * 10%);
+      }
+    }
+  }
+
+  @keyframes title-rise {
+    from {
+      translate: 0 105%;
+    }
+  }
+
+  @keyframes note-draw {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0);
+    }
+  }
+
+  @keyframes photo-uncover {
+    from {
+      clip-path: inset(22% 0 0 0);
+    }
+    to {
+      clip-path: inset(0);
+    }
+  }
+
+  /* Ends at 1.08, not 1, so the drift below never shows the photograph's edge. */
+  @keyframes photo-settle {
+    from {
+      transform: scale(1.18);
+    }
+    to {
+      transform: scale(1.08);
+    }
+  }
+
+  @keyframes photo-drift {
+    from {
+      translate: 0 -3%;
+    }
+    to {
+      translate: 0 3%;
+    }
+  }
+
+
+
+  @keyframes card-arrive {
+    from {
+      opacity: 0;
+      translate: 0 32px;
+    }
+  }
+
+  /* The underline runs out to the right, then draws back in from the left. */
+  @keyframes underline-redraw {
+    0% {
+      scale: 1 1;
+      transform-origin: right;
+    }
+    45% {
+      scale: 0 1;
+      transform-origin: right;
+    }
+    46% {
+      scale: 0 1;
+      transform-origin: left;
+    }
+    100% {
+      scale: 1 1;
+      transform-origin: left;
+    }
+  }
+
+  /* ── Trust ───────────────────────────────────────────────────── */
+  /* The reference's stone band: a centred heading and three promises, each under a brass
+   * line icon. Text is set to read (15px, not the reference's 11px). */
+  .trust {
+    padding-block: 80px;
+    background: var(--muted);
+  }
+
+  .trust-head {
+    text-align: center;
+  }
+
+  .trust-eyebrow { /* taste-skill-ignore: from the reference */
+    margin-bottom: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8d7a57;
+  }
+
+  /* The heading's box clips it, so it can rise from behind its lower edge. */
+  .trust-title {
+    overflow: hidden;
+    padding-bottom: 0.08em;
+    font: 400 38px / 1.02 var(--font-serif);
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  .trust-title > span {
+    display: block;
+  }
+
+  .trust-grid {
+    display: grid;
+    gap: 44px;
+    max-width: 990px;
+    margin: 44px auto 0;
+  }
+
+  .trust-item {
+    display: grid;
+    justify-items: center;
+    padding-inline: 12px;
+    text-align: center;
+  }
+
+  .trust-icon {
+    margin-bottom: 18px;
+    color: #9b8558;
+  }
+
+  .trust-item h3 {
+    margin-bottom: 10px;
+    font: 500 24px / 1.15 var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+
+  .trust-item p {
+    max-width: 30ch;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #77736d;
+  }
+
+  @media (min-width: 768px) {
+    .trust {
+      padding-block: 112px;
+    }
+
+    .trust-title {
+      font-size: clamp(42px, 4.4vw, 52px);
+    }
+
+    .trust-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 48px;
+      margin-top: 64px;
+    }
+
+    .trust-item {
+      padding-inline: 16px;
+    }
+  }
+
+  /* Motion. The heading rises from behind its edge; then, one promise after another, the
+   * icon's lines draw themselves in and the words rise beneath it. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .trust-title > span {
+        animation: title-rise linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 45%;
+      }
+
+      .trust-eyebrow {
+        animation: rise linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 40%;
+      }
+
+      /* Each line of the icon is dashed to its own length, then the gap slides away. The
+       * icons' paths are all shorter than 100 units, so one dash covers each. */
+      .trust-icon :is(path, circle, line, polyline, rect) {
+        stroke-dasharray: 100;
+        animation: icon-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 100% cover calc(28% + var(--n, 0) * 8%);
+      }
+
+      .trust-item > :not(.trust-icon) {
+        animation: rise linear both;
+        animation-timeline: view();
+        animation-range: entry calc(var(--n, 0) * 10%) entry calc(100% + var(--n, 0) * 10%);
+      }
+
+      /* Side by side, the promises follow one another left to right. Stacked on a phone,
+       * the scroll itself staggers them. */
+      @media (min-width: 768px) {
+        .trust-item:nth-child(2) {
+          --n: 1;
+        }
+
+        .trust-item:nth-child(3) {
+          --n: 2;
+        }
+      }
+    }
+  }
+
+  @keyframes icon-draw {
+    from {
+      stroke-dashoffset: 100;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+}
+
+/*
+ * Motion. CSS only, so nothing waits on JavaScript; browsers without scroll-driven
+ * animations simply show the resting state.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    /* The header gains its rule and blur once the page has scrolled 24px. */
+    .site-header {
+      animation: header-scrolled linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 24px;
+    }
+
+    [data-reveal] > * {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+
+    [data-reveal] > :nth-child(2) {
+      animation-range: entry 6% entry 61%;
+    }
+
+    [data-reveal] > :nth-child(n + 3) {
+      animation-range: entry 12% entry 67%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@keyframes header-scrolled {
+  to {
+    border-bottom-color: var(--border);
+    background: rgb(247 245 240 / 0.96);
+    backdrop-filter: blur(12px);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 24px;
+  }
+}
