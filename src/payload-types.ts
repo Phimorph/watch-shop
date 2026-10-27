@@ -560,8 +560,19 @@ export interface Home {
      * The italic mark on the right.
      */
     mark?: string | null;
+    /**
+     * Under the mark. {total} becomes the number of sold watches.
+     */
+    markNumber?: string | null;
     noticeLeft?: string | null;
     noticeRight?: string | null;
+    /**
+     * {shown} and {total} become the numbers.
+     */
+    countLabel: string;
+    /**
+     * Shows the rest of the watches.
+     */
     linkLabel: string;
   };
   story: {
@@ -777,8 +788,10 @@ export interface HomeSelect<T extends boolean = true> {
         heading?: T;
         intro?: T;
         mark?: T;
+        markNumber?: T;
         noticeLeft?: T;
         noticeRight?: T;
+        countLabel?: T;
         linkLabel?: T;
       };
   story?:

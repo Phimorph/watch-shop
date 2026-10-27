@@ -43,8 +43,10 @@ export const home = (media: Media): Omit<Home, 'id'> => ({
     heading: 'Collected by Others.\n*Remembered Here.*',
     intro: 'A glimpse at timepieces that have found their next owners.',
     mark: 'The\nArchive',
+    markNumber: '№ 01—{total}',
     noticeLeft: 'Illustrative archive examples',
     noticeRight: 'Past-sale status is sample content',
+    countLabel: 'Showing {shown} of {total} archive examples',
     linkLabel: 'Explore Past Sales',
   },
   story: {

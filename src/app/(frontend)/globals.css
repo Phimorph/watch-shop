@@ -1481,8 +1481,8 @@
   .watch-card-status {
     position: absolute;
     z-index: 2;
-    top: 28px;
-    left: 28px;
+    top: clamp(10px, 6cqi, 28px);
+    left: clamp(10px, 6cqi, 28px);
     padding: 6px 9px;
     background: #292a27;
     font-size: 11px;
@@ -1973,7 +1973,8 @@
     background: var(--muted);
   }
 
-  .trust-eyebrow { /* taste-skill-ignore: from the reference */
+  .trust-eyebrow, /* taste-skill-ignore: from the reference */
+  .sold-eyebrow {
     margin-bottom: 16px;
     font-size: 11px;
     font-weight: 600;
@@ -2200,6 +2201,129 @@
     }
     to {
       stroke-dashoffset: 0;
+    }
+  }
+
+  /* ── Sold ────────────────────────────────────────────────────── */
+  /* Our Collection again (it shares the classes, motion and "load more"), on the reference's
+   * paler band, with an eyebrow, the archive mark, no summaries and three wider cards a row. */
+  .sold {
+    background: #f1efe9;
+  }
+
+  .sold-eyebrow {
+    margin-bottom: 16px;
+  }
+
+  .sold-mark {
+    font: italic 400 18px / 1.05 var(--font-serif);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #a0988a;
+  }
+
+  .sold-mark span {
+    display: block;
+  }
+
+  .sold-mark b {
+    display: block;
+    margin-top: 10px;
+    font: 500 11px / 1 var(--font-sans);
+    font-style: normal;
+    letter-spacing: 0.15em;
+  }
+
+  .sold .watch-card-summary {
+    display: none;
+  }
+
+  /* On a phone the mark keeps the reference's place, top right, level with the eyebrow. */
+  @media (max-width: 767px) {
+    .sold .collection-head {
+      position: relative;
+    }
+
+    /* One line, so it clears the heading below. */
+    .sold-mark {
+      position: absolute;
+      top: -3px;
+      right: 0;
+      font-size: 14px;
+    }
+
+    .sold-mark span {
+      display: inline;
+    }
+
+    .sold-mark span + span::before {
+      content: ' ';
+    }
+
+    .sold-mark b {
+      display: inline;
+      margin-left: 10px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .sold-mark b {
+      display: none;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .sold-mark {
+      flex-shrink: 0;
+      margin-bottom: 10px;
+      font-size: 22px;
+      text-align: right;
+    }
+  }
+
+  /* Three a row, so the first row shows three, not the reference's two. */
+  @media (min-width: 1051px) {
+    .sold .collection-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .sold .collection-grid > li {
+      --col: 0;
+    }
+
+    .sold .collection-grid > li:nth-child(3n + 2) {
+      --col: 1;
+    }
+
+    .sold .collection-grid > li:nth-child(3n + 3) {
+      --col: 2;
+    }
+
+    .sold .watch-card-photo {
+      aspect-ratio: 1.38 / 1;
+    }
+
+    .sold .collection-later:nth-child(3) {
+      display: block;
+    }
+
+    .sold:not(:has(.collection-grid > li:nth-child(4))) .collection-more {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .sold-eyebrow,
+      .sold-mark {
+        animation: rise linear both;
+        animation-timeline: --collection-head;
+        animation-range: entry 0% cover 40%;
+      }
+
+      .sold-mark {
+        animation-range: entry 25% cover 52%;
+      }
     }
   }
 }

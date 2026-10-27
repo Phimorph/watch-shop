@@ -126,7 +126,17 @@ export const Home: GlobalConfig = {
             eyebrow,
             heading,
             intro,
-            { name: 'mark', type: 'textarea', admin: { rows: 2, description: 'The italic mark on the right.' } },
+            {
+              type: 'row',
+              fields: [
+                { name: 'mark', type: 'textarea', admin: { rows: 2, description: 'The italic mark on the right.' } },
+                {
+                  name: 'markNumber',
+                  type: 'text',
+                  admin: { description: 'Under the mark. {total} becomes the number of sold watches.' },
+                },
+              ],
+            },
             {
               type: 'row',
               fields: [
@@ -134,7 +144,18 @@ export const Home: GlobalConfig = {
                 { name: 'noticeRight', type: 'text' },
               ],
             },
-            { name: 'linkLabel', type: 'text', required: true },
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'countLabel',
+                  type: 'text',
+                  required: true,
+                  admin: { description: '{shown} and {total} become the numbers.' },
+                },
+                { name: 'linkLabel', type: 'text', required: true, admin: { description: 'Shows the rest of the watches.' } },
+              ],
+            },
           ],
         },
         {

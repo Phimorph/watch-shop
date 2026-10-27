@@ -28,7 +28,7 @@ export default async function HomePage() {
       <Marquee brands={home.brands} names={brands} />
       <Featured catalog={home.catalog} watches={collection} total={available.length} settings={settings} />
       <Trust trust={home.trust} />
-      <Sold sold={home.sold} watches={sold} />
+      <Sold sold={home.sold} watches={sold} settings={settings} />
     </>
   )
 }
