@@ -12,11 +12,10 @@ const internalHref: Field = {
   validate: (value: string | null | undefined) => /^\/(?!\/)/.test(value ?? '') || 'Start with a single /.',
 }
 
-const links = (name: string, maxRows = 8, description?: string): Field => ({
+const links = (name: string, maxRows = 8): Field => ({
   name,
   type: 'array',
   maxRows,
-  admin: { description },
   fields: [{ type: 'row', fields: [{ name: 'label', type: 'text', required: true }, internalHref] }],
 })
 
@@ -116,7 +115,29 @@ export const Settings: GlobalConfig = {
             },
             links('services', 5),
             { name: 'servicesNote', type: 'text' },
-            links('legalLinks', 3, 'Create the page under Site → Pages, then link it as /its-slug.'),
+            {
+              name: 'legalLinks',
+              type: 'array',
+              maxRows: 3,
+              admin: {
+                description:
+                  'Create the page under Site → Pages, then link it as /its-slug. Without a link the name shows muted, as a placeholder.',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'label', type: 'text', required: true },
+                    {
+                      name: 'href',
+                      type: 'text',
+                      validate: (value: string | null | undefined) =>
+                        !value || /^\/(?!\/)/.test(value) || 'Start with a single /.',
+                    },
+                  ],
+                },
+              ],
+            },
             { name: 'copyright', type: 'text' },
             { name: 'footerNote', type: 'text' },
           ],

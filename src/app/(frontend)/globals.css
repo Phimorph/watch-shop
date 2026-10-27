@@ -2889,21 +2889,19 @@
 
   /* ── Footer ──────────────────────────────────────────────────── */
   /* The reference's dark close: the wordmark and tagline, four columns of links, a hairline
-   * and the legal line. Below, the wordmark again, the width of the page, standing on the
-   * footer's bottom edge. */
+   * and the legal line. */
   .site-footer {
-    overflow: hidden;
-    padding-top: 64px;
+    padding-top: 56px;
     background: var(--inverse);
     color: var(--inverse-foreground);
   }
 
-  /* One column on a fold, two on a phone; the brand always takes a row of its own. */
+  /* Phone: the brand takes a row and the columns pair up; on a fold they stack. */
   .footer-top {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 36px 24px;
-    padding-bottom: 48px;
+    gap: 32px 24px;
+    padding-bottom: 40px;
   }
 
   .footer-brand {
@@ -2911,13 +2909,19 @@
   }
 
   .footer-brand .wordmark {
+    display: inline-block;
     font-size: 37px;
     color: #f1eee7;
   }
 
+  /* A box of its own, so the dot can drop into place. */
+  .footer-brand .wordmark span {
+    display: inline-block;
+  }
+
   .footer-brand p {
     max-width: 30ch;
-    margin-top: 16px;
+    margin-top: 14px;
     font-size: 14px;
     line-height: 1.7;
     color: #bbb7ae;
@@ -2970,7 +2974,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding-block: 20px;
+    padding-block: 18px 22px;
     font-size: 12px;
     line-height: 1.5;
     color: #99968f;
@@ -2992,41 +2996,20 @@
     gap: 8px 20px;
   }
 
-  /* Sized to the page's width in container units; the letters have no descenders, so the
-   * negative margin stands their baseline on the footer's edge. */
-  .footer-mark {
-    container-type: inline-size;
-    display: flex;
-    justify-content: space-between;
-    overflow: clip;
-    margin-top: 24px;
-    margin-bottom: -0.07em;
-    padding-top: 0.12em;
-    font-family: var(--font-serif);
-    font-weight: 500;
-    color: #2f2e2a;
-    user-select: none;
-  }
-
-  .footer-mark span {
-    font-size: 30cqi;
-    line-height: 0.74;
-    letter-spacing: -0.065em;
-  }
-
-  .footer-mark .footer-mark-dot {
-    color: var(--accent);
-  }
-
+  /* Tablet, as the reference: the brand beside two columns, the other two wrapping under. */
   @media (min-width: 768px) {
     .site-footer {
-      padding-top: 80px;
+      padding-top: 64px;
     }
 
     .footer-top {
-      grid-template-columns: repeat(4, 1fr);
-      gap: 48px 32px;
-      padding-bottom: 56px;
+      grid-template-columns: 1.3fr 1fr 1fr;
+      gap: 36px 30px;
+      padding-bottom: 54px;
+    }
+
+    .footer-brand {
+      grid-column: auto;
     }
 
     .footer-bottom {
@@ -3036,6 +3019,7 @@
       justify-content: space-between;
       gap: 8px 24px;
       min-height: 60px;
+      padding-block: 12px;
     }
   }
 
@@ -3043,25 +3027,34 @@
     .footer-top {
       grid-template-columns: 1.55fr repeat(4, 1fr);
     }
-
-    .footer-brand {
-      grid-column: auto;
-    }
   }
 
-  /* Motion. The columns rise one after another; the hairline runs across and the legal line
-   * rises under it. As the page reaches its end the wordmark's letters rise onto the edge in
-   * turn and the brass dot drops into place last, like a period set by hand. */
+  /* Motion. The wordmark writes itself in from the left and its brass dot drops into place,
+   * the tagline and the columns rise one after another, then the hairline runs across and
+   * the legal line rises under it. */
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       .footer-top {
         view-timeline: --footer;
       }
 
-      .footer-top > * {
+      .footer-brand .wordmark {
+        animation: note-draw linear both;
+        animation-timeline: --footer;
+        animation-range: entry 0% entry 40%;
+      }
+
+      .footer-brand .wordmark span {
+        animation: dot-drop linear both;
+        animation-timeline: --footer;
+        animation-range: entry 40% entry 65%;
+      }
+
+      .footer-brand p,
+      .footer-col {
         animation: rise linear both;
         animation-timeline: --footer;
-        animation-range: entry calc(var(--c, 0) * 9%) entry calc(50% + var(--c, 0) * 9%);
+        animation-range: entry calc(var(--c, 0) * 9% + 10%) entry calc(var(--c, 0) * 9% + 55%);
       }
 
       .footer-bottom {
@@ -3078,22 +3071,6 @@
         animation: rise linear both;
         animation-timeline: --legal;
         animation-range: entry 30% entry 100%;
-      }
-
-      .footer-mark {
-        view-timeline: --mark;
-      }
-
-      /* The last letter ends short of 100%: the page's end is exactly where entry ends. */
-      .footer-mark span {
-        animation: letter-rise linear both;
-        animation-timeline: --mark;
-        animation-range: entry calc(var(--i) * 6%) entry calc(48% + var(--i) * 6%);
-      }
-
-      .footer-mark .footer-mark-dot {
-        animation-name: dot-drop;
-        animation-range: entry 60% entry 95%;
       }
     }
   }
@@ -3129,12 +3106,6 @@
     margin-top: 12px;
     font-size: 16px;
     line-height: 1.75;
-  }
-
-  @keyframes letter-rise {
-    from {
-      translate: 0 110%;
-    }
   }
 
   @keyframes dot-drop {

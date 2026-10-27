@@ -776,15 +776,12 @@ export interface Setting {
     | null;
   servicesNote?: string | null;
   /**
-   * Create the page under Site → Pages, then link it as /its-slug.
+   * Create the page under Site → Pages, then link it as /its-slug. Without a link the name shows muted, as a placeholder.
    */
   legalLinks?:
     | {
         label: string;
-        /**
-         * A path on this site, such as /watches or /#faq.
-         */
-        href: string;
+        href?: string | null;
         id?: string | null;
       }[]
     | null;

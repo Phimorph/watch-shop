@@ -123,7 +123,7 @@ export const settings = (): Omit<Setting, 'id'> => ({
     { label: 'Watch Sales', href: '/watches' },
   ],
   servicesNote: 'By personal inquiry',
-  legalLinks: [],
+  legalLinks: [{ label: 'Privacy Policy' }, { label: 'Terms & Conditions' }],
   copyright: '© 2026 watch.me. All rights reserved.',
   footerNote: 'Sample storefront · inventory is illustrative',
   detailNote: 'Illustrative sample listing — specifications and availability are not verified live inventory.',

@@ -7,8 +7,7 @@ import { Wordmark } from './wordmark'
 
 /**
  * After the reference: the wordmark and tagline beside four columns, then the legal line.
- * Below it the wordmark again, set the width of the page, its letters rising onto the
- * footer's bottom edge as the page reaches its end.
+ * Links without a destination yet (social, legal) show muted, as placeholders.
  */
 export async function SiteFooter() {
   const settings = await getSettings()
@@ -18,7 +17,7 @@ export async function SiteFooter() {
     <footer className="site-footer">
       <div className="page-wrap">
         <div className="footer-top">
-          <div className="footer-brand" style={{ '--c': 0 } as CSSProperties}>
+          <div className="footer-brand">
             <Wordmark />
             {settings.tagline && <p>{settings.tagline}</p>}
           </div>
@@ -86,22 +85,14 @@ export async function SiteFooter() {
           {legalLinks?.length ? (
             <ul>
               {legalLinks.map(({ id, href, label }) => (
-                <li key={id}>
-                  <Link href={href}>{label}</Link>
+                <li key={id} className={href ? undefined : 'footer-quiet'}>
+                  {href ? <Link href={href}>{label}</Link> : label}
                 </li>
               ))}
             </ul>
           ) : null}
           {settings.footerNote && <p>{settings.footerNote}</p>}
         </div>
-
-        <p className="footer-mark" aria-hidden="true">
-          {[...'watch.me'].map((letter, index) => (
-            <span key={index} className={letter === '.' ? 'footer-mark-dot' : undefined} style={{ '--i': index } as CSSProperties}>
-              {letter}
-            </span>
-          ))}
-        </p>
       </div>
     </footer>
   )
