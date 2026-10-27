@@ -1,39 +1,108 @@
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 
 import { getSettings } from '@/lib/queries'
 
 import { Wordmark } from './wordmark'
 
+/**
+ * After the reference: the wordmark and tagline beside four columns, then the legal line.
+ * Below it the wordmark again, set the width of the page, its letters rising onto the
+ * footer's bottom edge as the page reaches its end.
+ */
 export async function SiteFooter() {
-  const { navigation, tagline, address, phone, email, copyright } = await getSettings()
+  const settings = await getSettings()
+  const { navigation, services, social, legalLinks } = settings
 
   return (
-    <footer className="bg-inverse py-16 text-inverse-foreground">
-      <div className="page-wrap grid gap-10 md:grid-cols-3">
-        <div>
-          <Wordmark />
-          {tagline && <p className="mt-4 max-w-[30ch] text-small text-inverse-muted">{tagline}</p>}
-        </div>
-        <nav aria-label="Footer">
-          <ul className="flex flex-col gap-2 text-small">
-            {navigation?.map(({ id, href, label }) => (
-              <li key={id}>
-                <Link href={href} className="hover:text-inverse-accent">
-                  {label}
-                </Link>
+    <footer className="site-footer">
+      <div className="page-wrap">
+        <div className="footer-top">
+          <div className="footer-brand" style={{ '--c': 0 } as CSSProperties}>
+            <Wordmark />
+            {settings.tagline && <p>{settings.tagline}</p>}
+          </div>
+
+          <nav className="footer-col" aria-label={settings.exploreHeading} style={{ '--c': 1 } as CSSProperties}>
+            <p className="footer-heading">{settings.exploreHeading}</p>
+            <ul>
+              {navigation?.map(({ id, href, label }) => (
+                <li key={id}>
+                  <Link href={href}>{label}</Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="footer-col" style={{ '--c': 2 } as CSSProperties}>
+            <p className="footer-heading">{settings.servicesHeading}</p>
+            <ul>
+              {services?.map(({ id, href, label }) => (
+                <li key={id}>
+                  <Link href={href}>{label}</Link>
+                </li>
+              ))}
+              {settings.servicesNote && <li className="footer-quiet">{settings.servicesNote}</li>}
+            </ul>
+          </div>
+
+          <address className="footer-col" style={{ '--c': 3 } as CSSProperties}>
+            <p className="footer-heading">{settings.contactHeading}</p>
+            <ul>
+              <li>
+                <a href={`tel:${settings.phone.replace(/[^\d+]/g, '')}`}>{settings.phone}</a>
               </li>
-            ))}
-          </ul>
-        </nav>
-        <address className="flex flex-col gap-2 text-small text-inverse-muted not-italic">
-          <a href={`tel:${phone.replace(/[^\d+]/g, '')}`} className="hover:text-inverse-foreground">
-            {phone}
-          </a>
-          {email && <a href={`mailto:${email}`}>{email}</a>}
-          <span>{address}</span>
-        </address>
+              {settings.email && (
+                <li>
+                  <a href={`mailto:${settings.email}`}>{settings.email}</a>
+                </li>
+              )}
+              <li>{settings.address}</li>
+            </ul>
+          </address>
+
+          {social?.length ? (
+            <div className="footer-col" style={{ '--c': 4 } as CSSProperties}>
+              <p className="footer-heading">{settings.followHeading}</p>
+              <ul>
+                {social.map(({ id, label, url }) => (
+                  <li key={id} className={url ? undefined : 'footer-quiet'}>
+                    {url ? (
+                      <a href={url} target="_blank" rel="noopener noreferrer">
+                        {label}
+                      </a>
+                    ) : (
+                      label
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </div>
+
+        <div className="footer-bottom">
+          {settings.copyright && <p>{settings.copyright}</p>}
+          {legalLinks?.length ? (
+            <ul>
+              {legalLinks.map(({ id, href, label }) => (
+                <li key={id}>
+                  <Link href={href}>{label}</Link>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {settings.footerNote && <p>{settings.footerNote}</p>}
+        </div>
+
+        <p className="footer-mark" aria-hidden="true">
+          {[...'watch.me'].map((letter, index) => (
+            <span key={index} className={letter === '.' ? 'footer-mark-dot' : undefined} style={{ '--i': index } as CSSProperties}>
+              {letter}
+            </span>
+          ))}
+        </p>
       </div>
-      {copyright && <p className="page-wrap mt-12 text-small text-inverse-muted">{copyright}</p>}
     </footer>
   )
 }

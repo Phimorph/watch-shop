@@ -2886,6 +2886,237 @@
       translate: 0 -8px;
     }
   }
+
+  /* ── Footer ──────────────────────────────────────────────────── */
+  /* The reference's dark close: the wordmark and tagline, four columns of links, a hairline
+   * and the legal line. Below, the wordmark again, the width of the page, standing on the
+   * footer's bottom edge. */
+  .site-footer {
+    overflow: hidden;
+    padding-top: 64px;
+    background: var(--inverse);
+    color: var(--inverse-foreground);
+  }
+
+  /* One column on a fold, two on a phone; the brand always takes a row of its own. */
+  .footer-top {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 36px 24px;
+    padding-bottom: 48px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-brand .wordmark {
+    font-size: 37px;
+    color: #f1eee7;
+  }
+
+  .footer-brand p {
+    max-width: 30ch;
+    margin-top: 16px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #bbb7ae;
+  }
+
+  .footer-col {
+    font-style: normal;
+  }
+
+  .footer-heading {
+    margin-bottom: 16px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #c4b18a;
+  }
+
+  .footer-col ul {
+    display: grid;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #c6c2b8;
+  }
+
+  .footer-col a,
+  .footer-bottom a {
+    text-decoration: underline 1px transparent;
+    text-underline-offset: 5px;
+    transition:
+      color 0.3s var(--ease-out),
+      text-decoration-color 0.3s var(--ease-out);
+  }
+
+  @media (hover: hover) {
+    .footer-col a:hover,
+    .footer-bottom a:hover {
+      color: #fff;
+      text-decoration-color: var(--inverse-accent);
+    }
+  }
+
+  .footer-quiet {
+    color: #8e8b84;
+  }
+
+  .footer-bottom {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-block: 20px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #99968f;
+  }
+
+  /* The hairline is drawn, not a border, so it can run across. */
+  .footer-bottom::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px; /* taste-skill-ignore: the reference's footer rule */
+    background: rgb(255 255 255 / 0.15);
+    transform-origin: left;
+  }
+
+  .footer-bottom ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+  }
+
+  /* Sized to the page's width in container units; the letters have no descenders, so the
+   * negative margin stands their baseline on the footer's edge. */
+  .footer-mark {
+    container-type: inline-size;
+    display: flex;
+    justify-content: space-between;
+    overflow: clip;
+    margin-top: 24px;
+    margin-bottom: -0.07em;
+    padding-top: 0.12em;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    color: #2f2e2a;
+    user-select: none;
+  }
+
+  .footer-mark span {
+    font-size: 30cqi;
+    line-height: 0.74;
+    letter-spacing: -0.065em;
+  }
+
+  .footer-mark .footer-mark-dot {
+    color: var(--accent);
+  }
+
+  @media (min-width: 768px) {
+    .site-footer {
+      padding-top: 80px;
+    }
+
+    .footer-top {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 48px 32px;
+      padding-bottom: 56px;
+    }
+
+    .footer-bottom {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px 24px;
+      min-height: 60px;
+    }
+  }
+
+  @media (min-width: 1051px) {
+    .footer-top {
+      grid-template-columns: 1.55fr repeat(4, 1fr);
+    }
+
+    .footer-brand {
+      grid-column: auto;
+    }
+  }
+
+  /* Motion. The columns rise one after another; the hairline runs across and the legal line
+   * rises under it. As the page reaches its end the wordmark's letters rise onto the edge in
+   * turn and the brass dot drops into place last, like a period set by hand. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .footer-top {
+        view-timeline: --footer;
+      }
+
+      .footer-top > * {
+        animation: rise linear both;
+        animation-timeline: --footer;
+        animation-range: entry calc(var(--c, 0) * 9%) entry calc(50% + var(--c, 0) * 9%);
+      }
+
+      .footer-bottom {
+        view-timeline: --legal;
+      }
+
+      .footer-bottom::before {
+        animation: rule-across linear both;
+        animation-timeline: --legal;
+        animation-range: entry 0% entry 100%;
+      }
+
+      .footer-bottom > * {
+        animation: rise linear both;
+        animation-timeline: --legal;
+        animation-range: entry 30% entry 100%;
+      }
+
+      .footer-mark {
+        view-timeline: --mark;
+      }
+
+      /* The last letter ends short of 100%: the page's end is exactly where entry ends. */
+      .footer-mark span {
+        animation: letter-rise linear both;
+        animation-timeline: --mark;
+        animation-range: entry calc(var(--i) * 6%) entry calc(48% + var(--i) * 6%);
+      }
+
+      .footer-mark .footer-mark-dot {
+        animation-name: dot-drop;
+        animation-range: entry 60% entry 95%;
+      }
+    }
+  }
+
+  @keyframes letter-rise {
+    from {
+      translate: 0 110%;
+    }
+  }
+
+  @keyframes dot-drop {
+    0% {
+      opacity: 0;
+      translate: 0 -150%;
+    }
+    70% {
+      opacity: 1;
+      translate: 0 6%;
+    }
+    100% {
+      translate: 0 0;
+    }
+  }
 }
 
 /* Registered so the sweep can be animated; at rest the hand is home at twelve. */

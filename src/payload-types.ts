@@ -657,8 +657,16 @@ export interface Setting {
   phone: string;
   email?: string | null;
   address: string;
-  instagram?: string | null;
-  facebook?: string | null;
+  /**
+   * Shown in the footer. Without a link the name shows muted, as a placeholder.
+   */
+  social?:
+    | {
+        label: string;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   /**
    * The short lines in the dark bar at the very top.
    */
@@ -683,6 +691,13 @@ export interface Setting {
       }[]
     | null;
   tagline?: string | null;
+  /**
+   * Lists the header navigation.
+   */
+  exploreHeading: string;
+  servicesHeading: string;
+  contactHeading: string;
+  followHeading: string;
   services?:
     | {
         label: string;
@@ -873,8 +888,13 @@ export interface SettingsSelect<T extends boolean = true> {
   phone?: T;
   email?: T;
   address?: T;
-  instagram?: T;
-  facebook?: T;
+  social?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
   announcements?:
     | T
     | {
@@ -890,6 +910,10 @@ export interface SettingsSelect<T extends boolean = true> {
         id?: T;
       };
   tagline?: T;
+  exploreHeading?: T;
+  servicesHeading?: T;
+  contactHeading?: T;
+  followHeading?: T;
   services?:
     | T
     | {

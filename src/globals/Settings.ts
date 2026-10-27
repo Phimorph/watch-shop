@@ -52,10 +52,18 @@ export const Settings: GlobalConfig = {
             { name: 'email', type: 'email' },
             { name: 'address', type: 'text', required: true },
             {
-              type: 'row',
+              name: 'social',
+              type: 'array',
+              maxRows: 4,
+              admin: { description: 'Shown in the footer. Without a link the name shows muted, as a placeholder.' },
               fields: [
-                { name: 'instagram', type: 'text', validate: httpsUrl },
-                { name: 'facebook', type: 'text', validate: httpsUrl },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'label', type: 'text', required: true },
+                    { name: 'url', type: 'text', validate: httpsUrl },
+                  ],
+                },
               ],
             },
           ],
@@ -84,6 +92,20 @@ export const Settings: GlobalConfig = {
           label: 'Footer',
           fields: [
             { name: 'tagline', type: 'textarea', admin: { rows: 2 } },
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'exploreHeading',
+                  type: 'text',
+                  required: true,
+                  admin: { description: 'Lists the header navigation.' },
+                },
+                { name: 'servicesHeading', type: 'text', required: true },
+                { name: 'contactHeading', type: 'text', required: true },
+                { name: 'followHeading', type: 'text', required: true },
+              ],
+            },
             links('services', 5),
             { name: 'servicesNote', type: 'text' },
             links('legalLinks', 3),

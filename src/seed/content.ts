@@ -90,6 +90,7 @@ export const settings = (): Omit<Setting, 'id'> => ({
   whatsapp: '880000000000',
   phone: '+880 000 000 000',
   address: 'Suvastu Archad ICT Bhaban, New Elephant Rd, Dhaka 1205',
+  social: [{ label: 'Instagram' }, { label: 'Facebook' }],
   announcements: [
     { text: '100% authentic' },
     { text: 'See it first. Decide with confidence.' },
@@ -113,6 +114,10 @@ export const settings = (): Omit<Setting, 'id'> => ({
     { label: 'FAQ', href: '/#faq' },
   ],
   tagline: 'Your destination for authentic pre-owned luxury watches in Dhaka.',
+  exploreHeading: 'Explore',
+  servicesHeading: 'Services',
+  contactHeading: 'Contact',
+  followHeading: 'Follow Us',
   services: [
     { label: 'In-Store Viewing', href: '/#about' },
     { label: 'Watch Sales', href: '/watches' },
