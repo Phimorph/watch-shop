@@ -66,6 +66,7 @@ export const home = (media: Media): Omit<Home, 'id'> => ({
     intro: 'Real experiences. Lasting impressions. Personal service.',
     items: [],
     emptyText: 'Customer feedback will appear here once verified and approved for publication.',
+    emptyNote: 'Verified customer reviews · placeholder',
   },
   faq: {
     eyebrow: 'FAQ',

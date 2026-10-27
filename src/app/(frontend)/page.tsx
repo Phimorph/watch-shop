@@ -1,6 +1,7 @@
 import { Featured } from '@/components/home/featured'
 import { Hero } from '@/components/home/hero'
 import { Marquee } from '@/components/home/marquee'
+import { Reviews } from '@/components/home/reviews'
 import { Sold } from '@/components/home/sold'
 import { Story } from '@/components/home/story'
 import { Trust } from '@/components/home/trust'
@@ -31,6 +32,7 @@ export default async function HomePage() {
       <Trust trust={home.trust} />
       <Sold sold={home.sold} watches={sold} settings={settings} />
       <Story story={home.story} chat={chat} />
+      <Reviews reviews={home.reviews} />
     </>
   )
 }

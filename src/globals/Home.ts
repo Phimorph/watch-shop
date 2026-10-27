@@ -203,7 +203,13 @@ export const Home: GlobalConfig = {
                 { name: 'author', type: 'text', required: true },
               ],
             },
-            { name: 'emptyText', type: 'text', admin: { description: 'Shown while there are no reviews.' } },
+            {
+              type: 'row',
+              fields: [
+                { name: 'emptyText', type: 'text', admin: { description: 'Shown while there are no reviews.' } },
+                { name: 'emptyNote', type: 'text', admin: { description: 'The small line under it.' } },
+              ],
+            },
           ],
         },
         {

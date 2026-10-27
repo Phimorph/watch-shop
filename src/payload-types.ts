@@ -613,6 +613,10 @@ export interface Home {
      * Shown while there are no reviews.
      */
     emptyText?: string | null;
+    /**
+     * The small line under it.
+     */
+    emptyNote?: string | null;
   };
   faq: {
     eyebrow?: string | null;
@@ -838,6 +842,7 @@ export interface HomeSelect<T extends boolean = true> {
               id?: T;
             };
         emptyText?: T;
+        emptyNote?: T;
       };
   faq?:
     | T

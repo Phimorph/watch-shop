@@ -1975,7 +1975,8 @@
 
   .trust-eyebrow, /* taste-skill-ignore: from the reference */
   .sold-eyebrow,
-  .story-eyebrow {
+  .story-eyebrow,
+  .reviews-eyebrow {
     margin-bottom: 16px;
     font-size: 11px;
     font-weight: 600;
@@ -2506,6 +2507,166 @@
       .story-link {
         animation-range: entry 30% cover 45%;
       }
+    }
+  }
+
+  /* ── Reviews ─────────────────────────────────────────────────── */
+  /* The reference's quiet close: the heading beside a quotation hung from a brass rule, set
+   * in the italic serif. Several reviews stack, each on its own rule. */
+  .reviews {
+    padding-block: 80px;
+  }
+
+  .reviews-inner {
+    display: grid;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .reviews-eyebrow {
+    margin-bottom: 16px;
+  }
+
+  /* The heading's box clips it, so it can rise from behind its lower edge. */
+  .reviews-title {
+    overflow: hidden;
+    padding-bottom: 0.08em;
+    font: 400 clamp(36px, 11vw, 44px) / 0.99 var(--font-serif);
+    letter-spacing: -0.025em;
+  }
+
+  .reviews-title > span {
+    display: block;
+  }
+
+  .reviews-intro {
+    max-width: 40ch;
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #77736d;
+  }
+
+  .reviews-list {
+    display: grid;
+    gap: 48px;
+  }
+
+  .review {
+    position: relative;
+    max-width: 560px;
+    padding: 6px 0 6px 28px;
+  }
+
+  /* The rule is drawn, not a border, so it can grow down the quotation. */
+  .review::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 1px; /* taste-skill-ignore: the reference's brass rule */
+    background: #c8b996;
+    transform-origin: top;
+  }
+
+  .review-mark {
+    display: block;
+    height: 0.42em;
+    font: 400 64px / 0.7 var(--font-serif);
+    color: #a58a5a;
+  }
+
+  .review p {
+    margin-block: 16px 20px;
+    font: italic 400 24px / 1.25 var(--font-serif);
+    text-wrap: pretty;
+  }
+
+  .review figcaption {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #7a7468;
+  }
+
+  @media (min-width: 768px) {
+    .reviews {
+      padding-block: 112px;
+    }
+
+    .reviews-inner {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 8%;
+    }
+
+    .reviews-title {
+      font-size: clamp(48px, 5vw, 64px);
+    }
+
+    .reviews-intro {
+      font-size: 16px;
+    }
+
+    .review {
+      padding-left: 36px;
+    }
+
+    .review-mark {
+      font-size: 76px;
+    }
+
+    .review p {
+      font-size: clamp(26px, 2.4vw, 32px);
+    }
+  }
+
+  /* Motion. The heading rises from behind its edge; the brass rule draws down, the
+   * quotation mark drops onto it and the words rise after. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .reviews-title > span {
+        animation: title-rise linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 40%;
+      }
+
+      .reviews-eyebrow,
+      .reviews-intro {
+        animation: rise linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 35%;
+      }
+
+      .review::before {
+        animation: rule-down linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 40%;
+      }
+
+      .review-mark {
+        animation: mark-drop linear both;
+        animation-timeline: view();
+        animation-range: entry 30% cover 40%;
+      }
+
+      .review > :not(.review-mark),
+      .review blockquote p {
+        animation: rise linear both;
+        animation-timeline: view();
+        animation-range: entry 40% cover 45%;
+      }
+    }
+  }
+
+  @keyframes rule-down {
+    from {
+      scale: 1 0;
+    }
+  }
+
+  @keyframes mark-drop {
+    from {
+      opacity: 0;
+      translate: 0 -24px;
     }
   }
 }
