@@ -35,6 +35,11 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  // Payload reads uploads from media/ by a path built at runtime, which the tracer cannot
+  // see; without this, a serverless deploy ships the API route without the photographs.
+  outputFileTracingIncludes: {
+    '/api/*': ['./media/**/*'],
+  },
   images: {
     localPatterns: [{ pathname: '/media/**' }],
     formats: ['image/avif', 'image/webp'],
