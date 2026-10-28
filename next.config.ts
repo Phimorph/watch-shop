@@ -52,6 +52,11 @@ const nextConfig: NextConfig = {
         source: '/((?!admin|api).*)',
         headers: [{ key: 'Content-Security-Policy', value: contentSecurityPolicy }],
       },
+      {
+        // Uploads are served as static files typed by extension; nothing in them may run.
+        source: '/media/:path*',
+        headers: [{ key: 'Content-Security-Policy', value: "default-src 'none'; sandbox" }],
+      },
     ]
   },
   webpack: (webpackConfig) => {
