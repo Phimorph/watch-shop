@@ -2,11 +2,12 @@ import { revalidateTag } from 'next/cache'
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, GlobalAfterChangeHook } from 'payload'
 
 /**
- * Marks the frontend's cached Payload reads stale after an edit.
+ * Expires the frontend's cached Payload reads after an edit. `expire: 0` rather than 'max':
+ * no visitor is served the old version, so a watch marked sold stops offering a price at once.
  * Scripts that run outside Next.js (the seed) set `context.disableRevalidate`.
  */
 const revalidate = (tag: string, context: Record<string, unknown>) => {
-  if (!context.disableRevalidate) revalidateTag(tag, 'max')
+  if (!context.disableRevalidate) revalidateTag(tag, { expire: 0 })
 }
 
 export const revalidateCollection =
