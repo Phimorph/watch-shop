@@ -35,7 +35,7 @@ for (const [name, alt] of Object.entries(photos) as [Photo, string][]) {
         overrideAccess: true,
         context,
         data: { alt },
-        filePath: path.resolve(dirname, `./images/watch-${name}.jpg`),
+        filePath: path.resolve(dirname, `./images/watch-${name}.webp`),
       })
     ).id
 }
