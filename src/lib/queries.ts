@@ -36,13 +36,30 @@ const withImages = (watch: Watch): WatchWithImages => ({
   images: watch.images.map(asMedia).filter((image) => image !== null),
 })
 
-export async function getWatches({ q, brand, condition, availability, sort = 'newest' }: WatchFilters = {}) {
+/**
+ * Published watches matching the filters. The search words are matched here, against the
+ * cached list, so a phrase a visitor types never becomes a cache entry of its own: only the
+ * few brand, condition, availability and sort combinations are cached.
+ */
+export async function getWatches({ q, ...filters }: WatchFilters = {}) {
+  const watches = await listWatches(filters)
+  const words = q?.toLowerCase().split(/\s+/).filter(Boolean) ?? []
+  if (!words.length) return watches
+
+  return watches.filter((watch) => {
+    const text = [watch.brand, watch.model, watch.reference, watch.description, watch.dial, watch.caseMaterial, watch.condition]
+      .join(' ')
+      .toLowerCase()
+    return words.every((word) => text.includes(word))
+  })
+}
+
+async function listWatches({ brand, condition, availability, sort = 'newest' }: Omit<WatchFilters, 'q'>) {
   'use cache'
   cacheLife('max')
   cacheTag('watches')
 
   const and: Where[] = []
-  if (q) and.push({ or: [{ title: { like: q } }, { reference: { like: q } }] })
   if (brand) and.push({ brand: { equals: brand } })
   if (condition) and.push({ condition: { equals: condition } })
   if (availability) and.push({ availability: { equals: availability } })

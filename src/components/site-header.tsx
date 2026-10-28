@@ -13,7 +13,9 @@ import { Wordmark } from './wordmark'
  * animation, so the header ships no JavaScript.
  */
 export async function SiteHeader() {
-  const { announcements, phone, contactLabel, whatsapp, messageGeneral, navigation } = await getSettings()
+  const settings = await getSettings()
+  const { announcements, phone, contactLabel, whatsapp, messageGeneral, navigation } = settings
+  const search = { placeholder: settings.headerSearchPlaceholder, label: settings.searchLabel }
   const tel = `tel:${phone.replace(/[^\d+]/g, '')}`
   const chat = whatsappHref(whatsapp, messageGeneral)
 
@@ -23,7 +25,7 @@ export async function SiteHeader() {
     <>
       <div className="utility">
         <div className="page-wrap utility-inner">
-          <ul className="utility-notes" data-count={announcements?.length} aria-label="Why watch.me">
+          <ul className="utility-notes" data-count={announcements?.length} aria-label={settings.announcementsLabel}>
             {announcements?.map(({ id, text }) => (
               <li key={id}>{text}</li>
             ))}
@@ -48,12 +50,12 @@ export async function SiteHeader() {
             ))}
           </nav>
           <div className="header-actions">
-            <SearchForm className="header-search" placeholder="Search by brand or model" />
-            <button type="button" className="icon-button search-toggle" popoverTarget="site-search" aria-label="Search">
+            <SearchForm className="header-search" {...search} />
+            <button type="button" className="icon-button search-toggle" popoverTarget="site-search" aria-label={settings.searchLabel}>
               <Search size={19} strokeWidth={1.5} aria-hidden="true" className="icon-open" />
               <X size={20} strokeWidth={1.5} aria-hidden="true" className="icon-close" />
             </button>
-            <button type="button" className="icon-button menu-toggle" popoverTarget="mobile-menu" aria-label="Menu">
+            <button type="button" className="icon-button menu-toggle" popoverTarget="mobile-menu" aria-label={settings.menuLabel}>
               <span className="burger" aria-hidden="true" />
             </button>
           </div>
@@ -61,7 +63,7 @@ export async function SiteHeader() {
 
         {/* The search icon opens this panel; its field takes focus as it opens. */}
         <div id="site-search" popover="auto" className="header-panel search-panel">
-          <SearchForm className="page-wrap" placeholder="Brand or model" autoFocus button />
+          <SearchForm className="page-wrap" {...search} autoFocus button />
         </div>
       </header>
 
@@ -78,7 +80,7 @@ export async function SiteHeader() {
             className="icon-button"
             popoverTarget="mobile-menu"
             popoverTargetAction="hide"
-            aria-label="Close menu"
+            aria-label={settings.closeMenuLabel}
           >
             <X size={22} strokeWidth={1.5} aria-hidden="true" />
           </button>
@@ -106,9 +108,9 @@ export async function SiteHeader() {
 }
 
 /** A plain GET form: `/watches` reads `?q=`, so search works without any script. */
-type SearchFormProps = { className?: string; placeholder: string; autoFocus?: boolean; button?: boolean }
+type SearchFormProps = { className?: string; placeholder: string; label: string; autoFocus?: boolean; button?: boolean }
 
-function SearchForm({ className, placeholder, autoFocus, button }: SearchFormProps) {
+function SearchForm({ className, placeholder, label, autoFocus, button }: SearchFormProps) {
   return (
     <form action="/watches" role="search" className={cn('search-form', className)}>
       <label className="search-field">
@@ -119,12 +121,12 @@ function SearchForm({ className, placeholder, autoFocus, button }: SearchFormPro
           maxLength={64}
           autoFocus={autoFocus}
           placeholder={placeholder}
-          aria-label="Search watches"
+          aria-label={label}
           enterKeyHint="search"
         />
       </label>
       {button && (
-        <button type="submit" className="search-submit" aria-label="Search">
+        <button type="submit" className="search-submit" aria-label={label}>
           <ArrowRight size={18} strokeWidth={1.5} aria-hidden="true" />
         </button>
       )}

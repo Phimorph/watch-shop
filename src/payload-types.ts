@@ -756,6 +756,80 @@ export interface Setting {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Inside the search field in the header.
+   */
+  headerSearchPlaceholder: string;
+  /**
+   * Names the search field and button for screen readers.
+   */
+  searchLabel: string;
+  /**
+   * The menu button, for screen readers.
+   */
+  menuLabel: string;
+  closeMenuLabel: string;
+  /**
+   * Names the dark bar’s lines for screen readers.
+   */
+  announcementsLabel: string;
+  searchEyebrow?: string | null;
+  /**
+   * Wrap a word in *asterisks* for italics. New lines are kept.
+   */
+  searchHeading: string;
+  /**
+   * Also the description search engines show.
+   */
+  searchIntro?: string | null;
+  searchPlaceholder: string;
+  searchButton: string;
+  refineLabel: string;
+  /**
+   * Names the brand list for screen readers.
+   */
+  filterBrandLabel: string;
+  /**
+   * Names the condition list for screen readers.
+   */
+  filterConditionLabel: string;
+  /**
+   * Names the availability list for screen readers.
+   */
+  filterAvailabilityLabel: string;
+  allBrands: string;
+  allConditions: string;
+  allWatches: string;
+  sortLabel: string;
+  sortNewest: string;
+  sortBrand: string;
+  sortModel: string;
+  /**
+   * Applies the lists, which need a press without JavaScript.
+   */
+  applyLabel: string;
+  clearLabel: string;
+  /**
+   * {count} becomes the number.
+   */
+  resultsOne: string;
+  /**
+   * {count} becomes the number.
+   */
+  resultsMany: string;
+  /**
+   * {q} becomes the search.
+   */
+  resultsFor: string;
+  resultsNote?: string | null;
+  loadMoreLabel: string;
+  emptyHeading: string;
+  emptyText: string;
+  /**
+   * Opens WhatsApp with the “find” message.
+   */
+  emptyButton: string;
+  emptyClear: string;
   tagline?: string | null;
   /**
    * Lists the header navigation.
@@ -1021,6 +1095,38 @@ export interface SettingsSelect<T extends boolean = true> {
         href?: T;
         id?: T;
       };
+  headerSearchPlaceholder?: T;
+  searchLabel?: T;
+  menuLabel?: T;
+  closeMenuLabel?: T;
+  announcementsLabel?: T;
+  searchEyebrow?: T;
+  searchHeading?: T;
+  searchIntro?: T;
+  searchPlaceholder?: T;
+  searchButton?: T;
+  refineLabel?: T;
+  filterBrandLabel?: T;
+  filterConditionLabel?: T;
+  filterAvailabilityLabel?: T;
+  allBrands?: T;
+  allConditions?: T;
+  allWatches?: T;
+  sortLabel?: T;
+  sortNewest?: T;
+  sortBrand?: T;
+  sortModel?: T;
+  applyLabel?: T;
+  clearLabel?: T;
+  resultsOne?: T;
+  resultsMany?: T;
+  resultsFor?: T;
+  resultsNote?: T;
+  loadMoreLabel?: T;
+  emptyHeading?: T;
+  emptyText?: T;
+  emptyButton?: T;
+  emptyClear?: T;
   tagline?: T;
   exploreHeading?: T;
   servicesHeading?: T;

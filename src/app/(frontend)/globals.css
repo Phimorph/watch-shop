@@ -1848,7 +1848,8 @@
   .reviews-eyebrow,
   .faq-eyebrow,
   .detail-brand,
-  .detail-eyebrow {
+  .detail-eyebrow,
+  .finder-eyebrow {
     margin-bottom: 16px;
     font-size: 11px;
     font-weight: 600;
@@ -2619,6 +2620,306 @@
   @media (min-width: 1051px) {
     .footer-top {
       grid-template-columns: 1.55fr repeat(4, 1fr);
+    }
+  }
+
+  /* ── Collection page (search) ───────────────────────────────── */
+  /* The reference's search page: a centred intro, the search bar, a row of lists to refine
+   * it, the count between rules, then the cards or a way to ask for what is missing. */
+  .finder {
+    padding-block: 48px 88px;
+  }
+
+  .finder-intro {
+    text-align: center;
+  }
+
+  .finder-title {
+    font: 400 clamp(40px, 12vw, 48px) / 0.98 var(--font-serif);
+    letter-spacing: -0.025em;
+  }
+
+  .finder-lede {
+    max-width: 34ch;
+    margin: 16px auto 28px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #77736d;
+  }
+
+  .finder-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 800px;
+    min-height: 56px;
+    margin: 0 auto 20px;
+    padding: 7px 7px 7px 14px;
+    border: 1px solid #d9d4ca; /* taste-skill-ignore: a form field */
+    background: #fbfaf7;
+    color: #807a70;
+  }
+
+  .finder-field:focus-within {
+    border-color: var(--accent);
+  }
+
+  .finder-field svg {
+    flex: none;
+  }
+
+  .finder-field input {
+    flex: 1;
+    min-width: 0;
+    height: 40px;
+    background: transparent;
+    font-size: 16px;
+    color: var(--foreground);
+    outline: none;
+  }
+
+  /* Too long for a phone's field, so it shows from tablets up, as in the reference; the
+   * field keeps its spoken label. */
+  .finder-field input::placeholder {
+    color: transparent;
+  }
+
+  .finder-submit {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 10px;
+    min-height: 42px;
+    padding-inline: 14px;
+    background: #252521;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #f7f5f0;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .finder-submit:hover,
+  .finder-apply:hover {
+    background: #514a3b;
+    color: #f7f5f0;
+  }
+
+  /* Phone: the lists pair up under the label; desktop: one row, sort to the right. */
+  .finder-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    max-width: 1100px;
+    margin: 0 auto 20px;
+  }
+
+  .finder-refine {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    font-size: 13px;
+    color: #6f6b63;
+  }
+
+  .finder-select,
+  .finder-sort {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+  }
+
+  .finder-tools select {
+    width: 100%;
+    height: 44px;
+    padding: 0 32px 0 12px;
+    border: 1px solid #ded9d0; /* taste-skill-ignore: a form field */
+    border-radius: 0;
+    appearance: none;
+    background: #f7f5f0 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2377736d' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 11px center;
+    font-size: 14px;
+    color: #45433d;
+    cursor: pointer;
+  }
+
+  .finder-sort span {
+    display: none;
+  }
+
+  /* A fold's width fits one list a row. */
+  @media (max-width: 359px) {
+    .finder-select,
+    .finder-sort {
+      flex-basis: 100%;
+    }
+  }
+
+  .finder-apply {
+    flex: 1 1 calc(50% - 8px);
+    height: 44px;
+    padding-inline: 18px;
+    border: 1px solid #252521; /* taste-skill-ignore: a button's edge */
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #252521;
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+
+  .finder-clear {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    font-size: 13px;
+    color: #7c6438;
+    transition: color 0.2s;
+  }
+
+  .finder-clear:hover {
+    color: var(--foreground);
+  }
+
+  .finder-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-width: 1100px;
+    margin: 0 auto 20px;
+  }
+
+  .finder-chips li {
+    padding: 6px 10px;
+    border: 1px solid #d8d2c5; /* taste-skill-ignore: the reference's filter chips */
+    font-size: 12px;
+    color: #6a6457;
+  }
+
+  .finder-bar-results {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-block: 14px;
+    border-block: 1px solid var(--border); /* taste-skill-ignore: the reference's rules */
+    font-size: 13px;
+    color: #77736d;
+  }
+
+  .finder-bar-results b {
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .finder-bar-results p + p {
+    max-width: 14ch;
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: right;
+  }
+
+  .finder-more {
+    display: flex;
+    justify-content: center;
+    padding-top: 40px;
+  }
+
+  .finder-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 320px;
+    padding: 28px 16px;
+    border: 1px solid var(--border); /* taste-skill-ignore: the reference's empty state */
+    text-align: center;
+  }
+
+  .finder-empty-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid #ded9d0; /* taste-skill-ignore: the reference's empty state */
+    color: #8a7752;
+  }
+
+  .finder-empty h2 {
+    margin-top: 12px;
+    font: 400 34px / 1.05 var(--font-serif);
+  }
+
+  .finder-empty p {
+    margin-bottom: 14px;
+    font-size: 14px;
+    color: #77736d;
+  }
+
+  @media (min-width: 768px) {
+    .finder {
+      padding-block: 64px 112px;
+    }
+
+    .finder-title {
+      font-size: clamp(52px, 5.5vw, 64px);
+    }
+
+    .finder-lede {
+      max-width: none;
+    }
+
+    .finder-field {
+      min-height: 60px;
+      padding-left: 18px;
+    }
+
+    .finder-field input::placeholder {
+      color: #8f8a80;
+    }
+
+    .finder-bar-results p + p {
+      max-width: none;
+    }
+  }
+
+  /* One row needs the desktop's width; tablets keep the phone's pairs. */
+  @media (min-width: 1051px) {
+    .finder-refine {
+      width: auto;
+      margin-right: 6px;
+    }
+
+    .finder-select {
+      flex: 0 1 180px;
+    }
+
+    .finder-sort {
+      display: flex;
+      flex: 0 1 auto;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+      font-size: 13px;
+      color: #77736d;
+    }
+
+    .finder-sort span {
+      display: inline;
+    }
+
+    .finder-sort select {
+      width: 130px;
+    }
+
+    .finder-apply {
+      flex: none;
     }
   }
 

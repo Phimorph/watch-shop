@@ -101,6 +101,65 @@ export const Settings: GlobalConfig = {
               admin: { description: 'The link beside the phone number in the dark bar. Opens WhatsApp.' },
             },
             links('navigation', 6),
+            {
+              type: 'row',
+              fields: [
+                label('headerSearchPlaceholder', 'Inside the search field in the header.'),
+                label('searchLabel', 'Names the search field and button for screen readers.'),
+              ],
+            },
+            {
+              type: 'row',
+              fields: [
+                label('menuLabel', 'The menu button, for screen readers.'),
+                label('closeMenuLabel'),
+                label('announcementsLabel', 'Names the dark bar’s lines for screen readers.'),
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Collection page',
+          description: 'The search page at /watches, which brand links also open. Top to bottom.',
+          fields: [
+            { name: 'searchEyebrow', type: 'text' },
+            {
+              name: 'searchHeading',
+              type: 'textarea',
+              required: true,
+              admin: { description: 'Wrap a word in *asterisks* for italics. New lines are kept.', rows: 2 },
+            },
+            { name: 'searchIntro', type: 'textarea', admin: { rows: 2, description: 'Also the description search engines show.' } },
+            { type: 'row', fields: [label('searchPlaceholder'), label('searchButton')] },
+            {
+              type: 'row',
+              fields: [
+                label('refineLabel'),
+                label('filterBrandLabel', 'Names the brand list for screen readers.'),
+                label('filterConditionLabel', 'Names the condition list for screen readers.'),
+                label('filterAvailabilityLabel', 'Names the availability list for screen readers.'),
+              ],
+            },
+            { type: 'row', fields: [label('allBrands'), label('allConditions'), label('allWatches')] },
+            { type: 'row', fields: [label('sortLabel'), label('sortNewest'), label('sortBrand'), label('sortModel')] },
+            {
+              type: 'row',
+              fields: [label('applyLabel', 'Applies the lists, which need a press without JavaScript.'), label('clearLabel')],
+            },
+            {
+              type: 'row',
+              fields: [
+                label('resultsOne', '{count} becomes the number.'),
+                label('resultsMany', '{count} becomes the number.'),
+                label('resultsFor', '{q} becomes the search.'),
+              ],
+            },
+            { type: 'row', fields: [{ name: 'resultsNote', type: 'text' }, label('loadMoreLabel')] },
+            { type: 'row', fields: [label('emptyHeading'), label('emptyText')] },
+            {
+              type: 'row',
+              fields: [label('emptyButton', 'Opens WhatsApp with the “find” message.'), label('emptyClear')],
+            },
           ],
         },
         {
