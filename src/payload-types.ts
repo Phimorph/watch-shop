@@ -787,13 +787,59 @@ export interface Setting {
     | null;
   copyright?: string | null;
   footerNote?: string | null;
+  breadcrumbHome: string;
+  breadcrumbCollection: string;
   /**
    * A line under the breadcrumbs.
    */
   detailNote?: string | null;
+  /**
+   * Before the reference number, beside the title.
+   */
+  referenceHeading: string;
+  availableHeadline: string;
   availableNote?: string | null;
+  soldHeadline: string;
+  unavailableHeadline: string;
+  unavailableNote?: string | null;
+  /**
+   * Opens WhatsApp with the price message.
+   */
+  priceButton: string;
+  /**
+   * Opens WhatsApp with the viewing message.
+   */
+  viewingButton: string;
+  /**
+   * Shown instead when the watch is sold or unavailable.
+   */
+  exploreButton: string;
   reassuranceTitle?: string | null;
   reassuranceText?: string | null;
+  specsHeading: string;
+  /**
+   * Box and papers use the labels under Watch cards.
+   */
+  specLabels: {
+    condition: string;
+    year: string;
+    movement: string;
+    caseSize: string;
+    caseMaterial: string;
+    dial: string;
+    included: string;
+    notIncluded: string;
+  };
+  viewingHeading: string;
+  /**
+   * The address follows it.
+   */
+  viewingText: string;
+  viewingLink: string;
+  backLabel: string;
+  relatedEyebrow: string;
+  relatedHeading: string;
+  relatedLink: string;
   /**
    * Opens the watch page.
    */
@@ -997,10 +1043,40 @@ export interface SettingsSelect<T extends boolean = true> {
       };
   copyright?: T;
   footerNote?: T;
+  breadcrumbHome?: T;
+  breadcrumbCollection?: T;
   detailNote?: T;
+  referenceHeading?: T;
+  availableHeadline?: T;
   availableNote?: T;
+  soldHeadline?: T;
+  unavailableHeadline?: T;
+  unavailableNote?: T;
+  priceButton?: T;
+  viewingButton?: T;
+  exploreButton?: T;
   reassuranceTitle?: T;
   reassuranceText?: T;
+  specsHeading?: T;
+  specLabels?:
+    | T
+    | {
+        condition?: T;
+        year?: T;
+        movement?: T;
+        caseSize?: T;
+        caseMaterial?: T;
+        dial?: T;
+        included?: T;
+        notIncluded?: T;
+      };
+  viewingHeading?: T;
+  viewingText?: T;
+  viewingLink?: T;
+  backLabel?: T;
+  relatedEyebrow?: T;
+  relatedHeading?: T;
+  relatedLink?: T;
   cardDetailsLabel?: T;
   cardPriceLabel?: T;
   referenceLabel?: T;

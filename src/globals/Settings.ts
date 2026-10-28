@@ -19,6 +19,14 @@ const links = (name: string, maxRows = 8): Field => ({
   fields: [{ type: 'row', fields: [{ name: 'label', type: 'text', required: true }, internalHref] }],
 })
 
+/** A required one-line label. */
+const label = (name: string, description?: string): Field => ({
+  name,
+  type: 'text',
+  required: true,
+  admin: { description },
+})
+
 function httpsUrl(value: string | null | undefined) {
   return !value || /^https:\/\/\S+$/.test(value) || 'Use a full https:// link.'
 }
@@ -144,9 +152,24 @@ export const Settings: GlobalConfig = {
         },
         {
           label: 'Watch page',
+          description: 'Every label on a watch’s own page, top to bottom.',
           fields: [
+            { type: 'row', fields: [label('breadcrumbHome'), label('breadcrumbCollection')] },
             { name: 'detailNote', type: 'text', admin: { description: 'A line under the breadcrumbs.' } },
-            { name: 'availableNote', type: 'text' },
+            label('referenceHeading', 'Before the reference number, beside the title.'),
+            { type: 'row', fields: [label('availableHeadline'), { name: 'availableNote', type: 'text' }] },
+            {
+              type: 'row',
+              fields: [label('soldHeadline'), label('unavailableHeadline'), { name: 'unavailableNote', type: 'text' }],
+            },
+            {
+              type: 'row',
+              fields: [
+                label('priceButton', 'Opens WhatsApp with the price message.'),
+                label('viewingButton', 'Opens WhatsApp with the viewing message.'),
+                label('exploreButton', 'Shown instead when the watch is sold or unavailable.'),
+              ],
+            },
             {
               type: 'row',
               fields: [
@@ -154,6 +177,32 @@ export const Settings: GlobalConfig = {
                 { name: 'reassuranceText', type: 'textarea', admin: { rows: 2 } },
               ],
             },
+            label('specsHeading'),
+            {
+              name: 'specLabels',
+              type: 'group',
+              admin: { description: 'Box and papers use the labels under Watch cards.' },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [label('condition'), label('year'), label('movement'), label('caseSize')],
+                },
+                {
+                  type: 'row',
+                  fields: [label('caseMaterial'), label('dial'), label('included'), label('notIncluded')],
+                },
+              ],
+            },
+            {
+              type: 'row',
+              fields: [
+                label('viewingHeading'),
+                label('viewingText', 'The address follows it.'),
+                label('viewingLink'),
+              ],
+            },
+            label('backLabel'),
+            { type: 'row', fields: [label('relatedEyebrow'), label('relatedHeading'), label('relatedLink')] },
           ],
         },
         {
