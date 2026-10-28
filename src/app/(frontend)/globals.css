@@ -1651,15 +1651,18 @@
     }
   }
 
-  /* The count and "load more", under a rule as in the reference. */
+  /*
+   * The count, a brass progress line and "load more", centred under the grid. The line is
+   * the share of the stock on screen; it fills when more cards open. "Load more" is the
+   * site's dark button, the width of a phone's column and a fixed width wider up.
+   */
   .collection-foot {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    margin-top: 44px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border); /* taste-skill-ignore: from the reference */
+    align-items: center;
+    gap: 14px;
+    margin-top: 56px;
+    text-align: center;
   }
 
   .collection-count {
@@ -1677,41 +1680,79 @@
     content: counter(shown);
   }
 
+  .collection-progress {
+    width: min(240px, 72%);
+    height: 2px;
+    margin-bottom: 10px;
+    background: var(--border);
+    overflow: hidden;
+  }
+
+  .collection-progress::before {
+    content: '';
+    display: block;
+    height: 100%;
+    background: var(--brass);
+    transform-origin: left;
+    scale: var(--from, var(--to)) 1;
+    transition: scale 0.7s var(--ease-out);
+  }
+
+  .collection-foot:has(.collection-toggle:checked) .collection-progress::before {
+    scale: var(--to) 1;
+  }
+
   .collection-more {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    min-height: 44px;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    min-height: 54px;
+    padding-inline: 24px;
+    background: #242521;
     font-size: 12px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
+    color: #f5f2eb;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: background 0.2s;
   }
 
   .collection-more svg {
+    color: var(--inverse-accent);
     transition: translate 0.35s var(--ease-out);
   }
 
   .collection-more:hover {
-    color: var(--accent);
+    background: #514a3b;
   }
 
   .collection-more:hover svg {
     translate: 2px 2px;
   }
 
-  .collection-toggle:focus-visible ~ .collection-foot .collection-more {
+  .collection-onward:hover svg {
+    translate: 2px -2px;
+  }
+
+  .collection-more:focus-visible,
+  .collection-more:has(.collection-toggle:focus-visible) {
     outline: 2px solid var(--accent);
     outline-offset: 4px;
   }
 
-  .collection-later,
-  .collection-toggle:checked ~ .collection-foot .collection-more {
+  /* The collection page link waits until "load more" has opened every card here. */
+  .collection-foot:has(.collection-toggle:not(:checked)) .collection-onward {
     display: none;
   }
 
-  .collection-toggle:checked ~ .collection-grid .collection-later {
+  .collection-later,
+  .collection-more:has(.collection-toggle:checked) {
+    display: none;
+  }
+
+  .collection:has(.collection-toggle:checked) .collection-later {
     display: block;
   }
 
@@ -1780,10 +1821,11 @@
     }
 
     .collection-foot {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 56px;
+      margin-top: 72px;
+    }
+
+    .collection-more {
+      width: 340px;
     }
   }
 
@@ -2101,6 +2143,10 @@
 
     .sold .collection-later:nth-child(3) {
       display: block;
+    }
+
+    .collection-progress::before {
+      scale: var(--from-wide, var(--from, var(--to))) 1;
     }
 
     .sold:not(:has(.collection-grid > li:nth-child(4))) .collection-more {
@@ -2569,7 +2615,8 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding-block: 18px 22px;
+    /* Room under the last line for the WhatsApp button fixed over the corner. */
+    padding-block: 18px 92px;
     font-size: 12px;
     line-height: 1.5;
     color: #99968f;
@@ -2613,13 +2660,94 @@
       justify-content: space-between;
       gap: 8px 24px;
       min-height: 60px;
+      /* The row ends short of the WhatsApp button in the corner. */
       padding-block: 12px;
+      padding-right: 96px;
     }
   }
 
   @media (min-width: 1051px) {
     .footer-top {
       grid-template-columns: 1.55fr repeat(4, 1fr);
+    }
+  }
+
+  /* ── WhatsApp button ─────────────────────────────────────────── */
+  /* The reference's floating chat button in the footer's ink, ringed in brass. On a wide
+   * screen with a pointer, its label unrolls to the left of the mark on hover or focus. */
+  .whatsapp-float {
+    position: fixed;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 45;
+    display: flex;
+    align-items: center;
+    height: 54px;
+    min-width: 54px;
+    padding-inline: 14px;
+    border: 1px solid var(--brass); /* taste-skill-ignore: the button's brass ring */
+    border-radius: 999px; /* taste-skill-ignore: the reference's round chat button */
+    background: var(--inverse);
+    color: var(--inverse-foreground);
+    box-shadow: 0 10px 24px rgb(20 20 18 / 0.22); /* taste-skill-ignore: floats over the page */
+    transition:
+      background 0.25s,
+      translate 0.35s var(--ease-out);
+  }
+
+  .whatsapp-float svg {
+    flex: none;
+    fill: currentColor;
+  }
+
+  .whatsapp-float-label {
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition:
+      max-width 0.45s var(--ease-out),
+      margin 0.45s var(--ease-out),
+      opacity 0.3s;
+  }
+
+  .whatsapp-float:hover {
+    background: #3a3832;
+    translate: 0 -2px;
+  }
+
+  .whatsapp-float:focus-visible {
+    outline: 2px solid var(--inverse-accent);
+    outline-offset: 3px;
+  }
+
+  @media (min-width: 768px) {
+    .whatsapp-float {
+      right: 28px;
+      bottom: 28px;
+      height: 58px;
+      min-width: 58px;
+      padding-inline: 16px;
+    }
+  }
+
+  @media (min-width: 768px) and (hover: hover) {
+    .whatsapp-float:hover .whatsapp-float-label,
+    .whatsapp-float:focus-visible .whatsapp-float-label {
+      max-width: 16em;
+      margin-inline: 6px 12px;
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .whatsapp-float,
+    .whatsapp-float-label,
+    .collection-progress::before {
+      transition: none;
     }
   }
 
@@ -2822,12 +2950,6 @@
     font-size: 12px;
     line-height: 1.4;
     text-align: right;
-  }
-
-  .finder-more {
-    display: flex;
-    justify-content: center;
-    padding-top: 40px;
   }
 
   .finder-empty {

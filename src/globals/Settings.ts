@@ -63,6 +63,15 @@ export const Settings: GlobalConfig = {
               validate: (value: string | null | undefined) =>
                 /^\d{8,15}$/.test(value ?? '') || 'Use 8 to 15 digits, no spaces or +.',
             },
+            {
+              name: 'chatLabel',
+              type: 'text',
+              required: true,
+              defaultValue: 'Chat on WhatsApp',
+              admin: {
+                description: 'The round WhatsApp button in the corner of every page. Opens WhatsApp with the general message.',
+              },
+            },
             { name: 'phone', type: 'text', required: true },
             { name: 'email', type: 'email' },
             { name: 'address', type: 'text', required: true },
@@ -155,6 +164,13 @@ export const Settings: GlobalConfig = {
               ],
             },
             { type: 'row', fields: [{ name: 'resultsNote', type: 'text' }, label('loadMoreLabel')] },
+            {
+              name: 'loadMoreCount',
+              type: 'text',
+              required: true,
+              defaultValue: 'Showing {shown} of {total} watches',
+              admin: { description: 'Above “load more”. {shown} and {total} become the numbers.' },
+            },
             { type: 'row', fields: [label('emptyHeading'), label('emptyText')] },
             {
               type: 'row',

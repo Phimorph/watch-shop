@@ -88,6 +88,7 @@ export const home = (media: Media): Omit<Home, 'id'> => ({
 /** Sample site settings. Edit them in the admin under Globals → Settings. */
 export const settings = (): Omit<Setting, 'id'> => ({
   whatsapp: '880000000000',
+  chatLabel: 'Chat on WhatsApp',
   phone: '+880 000 000 000',
   address: 'Suvastu Archad ICT Bhaban, New Elephant Rd, Dhaka 1205',
   social: [{ label: 'Instagram' }, { label: 'Facebook' }],
@@ -134,6 +135,7 @@ export const settings = (): Omit<Setting, 'id'> => ({
   resultsFor: 'for “{q}”',
   resultsNote: 'Sample inventory · not confirmed stock',
   loadMoreLabel: 'Load More Watches',
+  loadMoreCount: 'Showing {shown} of {total} watches',
   emptyHeading: 'No watches found.',
   emptyText: 'Try another search or ask us to help.',
   emptyButton: 'Ask Us to Find It',

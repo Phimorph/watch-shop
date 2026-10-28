@@ -3,6 +3,7 @@ import { Cormorant_Garamond, DM_Sans } from 'next/font/google'
 
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
+import { WhatsAppFloat } from '@/components/whatsapp-float'
 import { getSettings } from '@/lib/queries'
 import { serverURL } from '@/lib/site'
 
@@ -49,6 +50,7 @@ export default function FrontendLayout({ children }: LayoutProps<'/'>) {
         <SiteHeader />
         <main id="main">{children}</main>
         <SiteFooter />
+        <WhatsAppFloat />
       </body>
     </html>
   )

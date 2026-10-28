@@ -720,6 +720,10 @@ export interface Setting {
    * International format, digits only. Example: 8801712345678
    */
   whatsapp: string;
+  /**
+   * The round WhatsApp button in the corner of every page. Opens WhatsApp with the general message.
+   */
+  chatLabel: string;
   phone: string;
   email?: string | null;
   address: string;
@@ -823,6 +827,10 @@ export interface Setting {
   resultsFor: string;
   resultsNote?: string | null;
   loadMoreLabel: string;
+  /**
+   * Above “load more”. {shown} and {total} become the numbers.
+   */
+  loadMoreCount: string;
   emptyHeading: string;
   emptyText: string;
   /**
@@ -1071,6 +1079,7 @@ export interface HomeSelect<T extends boolean = true> {
  */
 export interface SettingsSelect<T extends boolean = true> {
   whatsapp?: T;
+  chatLabel?: T;
   phone?: T;
   email?: T;
   address?: T;
@@ -1123,6 +1132,7 @@ export interface SettingsSelect<T extends boolean = true> {
   resultsFor?: T;
   resultsNote?: T;
   loadMoreLabel?: T;
+  loadMoreCount?: T;
   emptyHeading?: T;
   emptyText?: T;
   emptyButton?: T;

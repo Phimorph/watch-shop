@@ -1,6 +1,6 @@
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
-import type { ComponentProps } from 'react'
+import type { ComponentProps, CSSProperties } from 'react'
 
 import { Emphasis } from '@/components/emphasis'
 import { WatchCard } from '@/components/watch-card'
@@ -17,10 +17,18 @@ type Props = {
 /** Cards shown before "load more", as in the reference. */
 const FIRST = 4
 
+/** The progress line's share of the total, before and after "load more". */
+export const progress = (from: number, to: number, total: number, fromWide = from) =>
+  ({
+    '--from': from / Math.max(total, 1),
+    '--from-wide': fromWide / Math.max(total, 1),
+    '--to': to / Math.max(total, 1),
+  }) as CSSProperties
+
 /**
  * "Our Collection", after the reference: the heading row with its link, the sample notice,
- * four cards a row and the count with "load more". "Load more" is a label for a hidden
- * checkbox and the count a CSS counter, so the section needs no JavaScript.
+ * four cards a row, then the count, a progress line and "load more". "Load more" is a label
+ * for a hidden checkbox and the count a CSS counter, so the section needs no JavaScript.
  */
 export function Featured({ catalog, watches, total, settings }: Props) {
   const shown = watches.slice(0, catalog.count ?? 8)
@@ -53,7 +61,6 @@ export function Featured({ catalog, watches, total, settings }: Props) {
           </div>
         )}
 
-        {more && <input type="checkbox" id="collection-more" className="collection-toggle sr-only" />}
         <ul className="collection-grid">
           {shown.map((watch, index) => (
             <li
@@ -65,17 +72,27 @@ export function Featured({ catalog, watches, total, settings }: Props) {
           ))}
         </ul>
 
-        <div className="collection-foot">
+        <div className="collection-foot" style={progress(Math.min(FIRST, shown.length), shown.length, total)}>
           <p className="collection-count">
             {before}
             <b className="collection-shown" />
             {after}
           </p>
+          <span className="collection-progress" aria-hidden="true" />
           {more && (
-            <label htmlFor="collection-more" className="collection-more">
+            <label className="collection-more">
+              {/* Inside the button, so the focus a click gives it doesn't scroll the page up. */}
+              <input type="checkbox" className="collection-toggle sr-only" />
               {catalog.moreLabel}
-              <ArrowDownRight size={15} strokeWidth={1.5} aria-hidden="true" />
+              <ArrowDownRight size={16} strokeWidth={1.5} aria-hidden="true" />
             </label>
+          )}
+          {/* Once every card here is open, the rest of the stock is on the collection page. */}
+          {total > shown.length && (
+            <Link href="/watches" className="collection-more collection-onward">
+              {catalog.linkLabel}
+              <ArrowUpRight size={16} strokeWidth={1.5} aria-hidden="true" />
+            </Link>
           )}
         </div>
       </div>

@@ -2,6 +2,7 @@ import { ArrowDownRight } from 'lucide-react'
 import type { ComponentProps } from 'react'
 
 import { Emphasis } from '@/components/emphasis'
+import { progress } from '@/components/home/featured'
 import { WatchCard } from '@/components/watch-card'
 import type { WatchWithImages } from '@/lib/queries'
 import type { Home } from '@/payload-types'
@@ -57,7 +58,6 @@ export function Sold({ sold, watches, settings }: Props) {
           </div>
         )}
 
-        {more && <input type="checkbox" id="sold-more" className="collection-toggle sr-only" />}
         <ul className="collection-grid">
           {watches.map((watch, index) => (
             <li
@@ -69,16 +69,22 @@ export function Sold({ sold, watches, settings }: Props) {
           ))}
         </ul>
 
-        <div className="collection-foot">
+        <div
+          className="collection-foot"
+          style={progress(Math.min(FIRST, watches.length), watches.length, watches.length, Math.min(3, watches.length))}
+        >
           <p className="collection-count">
             {before}
             <b className="collection-shown" />
             {after}
           </p>
+          <span className="collection-progress" aria-hidden="true" />
           {more && (
-            <label htmlFor="sold-more" className="collection-more">
+            <label className="collection-more">
+              {/* Inside the button, so the focus a click gives it doesn't scroll the page up. */}
+              <input type="checkbox" className="collection-toggle sr-only" />
               {sold.linkLabel}
-              <ArrowDownRight size={15} strokeWidth={1.5} aria-hidden="true" />
+              <ArrowDownRight size={16} strokeWidth={1.5} aria-hidden="true" />
             </label>
           )}
         </div>

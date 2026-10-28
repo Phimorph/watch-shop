@@ -1,7 +1,7 @@
 import { ArrowDownRight, ArrowRight, ArrowUpRight, Search, SlidersHorizontal, X } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Suspense } from 'react'
+import { type CSSProperties, Suspense } from 'react'
 
 import { conditions } from '@/collections/Watches'
 import { Emphasis } from '@/components/emphasis'
@@ -60,6 +60,7 @@ async function Results({
   const active = Boolean(filters.brand || filters.condition || filters.availability !== 'available')
 
   const count = (watches.length === 1 ? settings.resultsOne : settings.resultsMany).split('{count}')
+  const shownCount = settings.loadMoreCount.replace('{total}', String(watches.length)).split('{shown}')
   const chips = [
     filters.brand,
     filters.condition,
@@ -99,13 +100,22 @@ async function Results({
               </li>
             ))}
           </ul>
-          {watches.length > show && (
-            <p className="finder-more">
-              <Link href={withParams(params, { show: String(show + STEP) })} scroll={false} className="collection-link">
-                {settings.loadMoreLabel}
-                <ArrowDownRight size={15} strokeWidth={1.5} aria-hidden="true" />
-              </Link>
-            </p>
+          {/* The count and line stay once all are shown; the line grows as the client keeps the element. */}
+          {watches.length > STEP && (
+            <div className="collection-foot" style={{ '--to': show / watches.length } as CSSProperties}>
+              <p className="collection-count">
+                {shownCount[0]}
+                <b>{show}</b>
+                {shownCount[1]}
+              </p>
+              <span className="collection-progress" aria-hidden="true" />
+              {watches.length > show && (
+                <Link href={withParams(params, { show: String(show + STEP) })} scroll={false} className="collection-more">
+                  {settings.loadMoreLabel}
+                  <ArrowDownRight size={16} strokeWidth={1.5} aria-hidden="true" />
+                </Link>
+              )}
+            </div>
           )}
         </>
       ) : (
