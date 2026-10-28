@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import type { CSSProperties } from 'react'
 
 import { getSettings } from '@/lib/queries'
 
@@ -22,7 +21,7 @@ export async function SiteFooter() {
             {settings.tagline && <p>{settings.tagline}</p>}
           </div>
 
-          <nav className="footer-col" aria-label={settings.exploreHeading} style={{ '--c': 1 } as CSSProperties}>
+          <nav className="footer-col" aria-label={settings.exploreHeading}>
             <p className="footer-heading">{settings.exploreHeading}</p>
             <ul>
               {navigation?.map(({ id, href, label }) => (
@@ -33,7 +32,7 @@ export async function SiteFooter() {
             </ul>
           </nav>
 
-          <div className="footer-col" style={{ '--c': 2 } as CSSProperties}>
+          <div className="footer-col">
             <p className="footer-heading">{settings.servicesHeading}</p>
             <ul>
               {services?.map(({ id, href, label }) => (
@@ -45,7 +44,7 @@ export async function SiteFooter() {
             </ul>
           </div>
 
-          <address className="footer-col" style={{ '--c': 3 } as CSSProperties}>
+          <address className="footer-col">
             <p className="footer-heading">{settings.contactHeading}</p>
             <ul>
               <li>
@@ -61,7 +60,7 @@ export async function SiteFooter() {
           </address>
 
           {social?.length ? (
-            <div className="footer-col" style={{ '--c': 4 } as CSSProperties}>
+            <div className="footer-col">
               <p className="footer-heading">{settings.followHeading}</p>
               <ul>
                 {social.map(({ id, label, url }) => (

@@ -1,6 +1,6 @@
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
-import type { ComponentProps, CSSProperties } from 'react'
+import type { ComponentProps } from 'react'
 
 import { Emphasis } from '@/components/emphasis'
 import { WatchCard } from '@/components/watch-card'
@@ -59,7 +59,6 @@ export function Featured({ catalog, watches, total, settings }: Props) {
             <li
               key={watch.id}
               className={index >= FIRST ? 'collection-later' : undefined}
-              style={{ '--i': index - FIRST } as CSSProperties}
             >
               <WatchCard watch={watch} settings={settings} />
             </li>

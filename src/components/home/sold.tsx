@@ -1,5 +1,5 @@
 import { ArrowDownRight } from 'lucide-react'
-import type { ComponentProps, CSSProperties } from 'react'
+import type { ComponentProps } from 'react'
 
 import { Emphasis } from '@/components/emphasis'
 import { WatchCard } from '@/components/watch-card'
@@ -16,7 +16,7 @@ type Props = {
 const FIRST = 2
 
 /**
- * "Collected by Others", after the reference: Our Collection's layout and motion, with an
+ * "Collected by Others", after the reference: Our Collection's layout, with an
  * eyebrow, the archive mark and three wider cards a row. Reuses the collection's hidden
  * checkbox and CSS counter, so it needs no JavaScript either.
  */
@@ -63,7 +63,6 @@ export function Sold({ sold, watches, settings }: Props) {
             <li
               key={watch.id}
               className={index >= FIRST ? 'collection-later' : undefined}
-              style={{ '--i': index - FIRST } as CSSProperties}
             >
               <WatchCard watch={watch} settings={settings} />
             </li>

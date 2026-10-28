@@ -1,22 +1,5 @@
-import { Fragment, type CSSProperties } from 'react'
-
 import { Emphasis } from '@/components/emphasis'
 import type { Home } from '@/payload-types'
-
-/** A span a word, so the quotation can ink in word by word as it scrolls into view. */
-function Inked({ text }: { text: string }) {
-  const words = text.split(/\s+/)
-  return (
-    <p style={{ '--words': words.length } as CSSProperties}>
-      {words.map((word, index) => (
-        <Fragment key={index}>
-          {index > 0 && ' '}
-          <span style={{ '--w': index } as CSSProperties}>{word}</span>
-        </Fragment>
-      ))}
-    </p>
-  )
-}
 
 /**
  * "From Our Customers", after the reference: the heading beside a quotation hung from a
@@ -48,7 +31,7 @@ export function Reviews({ reviews }: { reviews: Home['reviews'] }) {
                     “
                   </span>
                   <blockquote>
-                    <Inked text={quote} />
+                    <p>{quote}</p>
                   </blockquote>
                   <figcaption>{author}</figcaption>
                 </figure>
@@ -60,7 +43,7 @@ export function Reviews({ reviews }: { reviews: Home['reviews'] }) {
             <span className="review-mark" aria-hidden="true">
               “
             </span>
-            <Inked text={reviews.emptyText ?? ''} />
+            <p>{reviews.emptyText}</p>
             {reviews.emptyNote && <figcaption>{reviews.emptyNote}</figcaption>}
           </figure>
         )}

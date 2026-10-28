@@ -1,5 +1,4 @@
 import { Check, ShieldCheck, ShoppingBag } from 'lucide-react'
-import type { CSSProperties } from 'react'
 
 import { Emphasis } from '@/components/emphasis'
 import type { Home } from '@/payload-types'
@@ -8,8 +7,7 @@ const icons = { shield: ShieldCheck, check: Check, bag: ShoppingBag } as const
 
 /**
  * "Confidence in Every Detail", after the reference: a centred heading on a stone band and
- * three promises. Each promise sits in a subdial, like the three of a chronograph: a minute
- * track the seconds hand fills as the section scrolls in, then the icon draws itself.
+ * three promises, each set in a subdial like the three of a chronograph.
  */
 export function Trust({ trust }: { trust: Home['trust'] }) {
   if (!trust.items?.length) return null
@@ -26,10 +24,10 @@ export function Trust({ trust }: { trust: Home['trust'] }) {
           </h2>
         </div>
         <ul className="trust-grid">
-          {trust.items.map(({ id, icon, title, text }, index) => {
+          {trust.items.map(({ id, icon, title, text }) => {
             const Icon = icons[icon]
             return (
-              <li key={id} className="trust-item" style={{ '--n': index } as CSSProperties}>
+              <li key={id} className="trust-item">
                 <span className="trust-dial" aria-hidden="true">
                   {/* pathLength turns the dashes into 60 minute and 12 hour ticks, from twelve o'clock. */}
                   <svg viewBox="0 0 100 100" className="trust-track">

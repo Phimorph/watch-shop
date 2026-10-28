@@ -28,7 +28,7 @@ export default async function WatchesPage({ searchParams }: PageProps<'/watches'
 
   return (
     <div className="page-x pt-12 pb-24 md:pt-20 md:pb-40">
-      <div className="flex flex-col gap-4" data-reveal>
+      <div className="flex flex-col gap-4">
         <h1 className="text-display">{catalog.heading}</h1>
         {catalog.intro && <p className="max-w-[44ch] text-lead text-muted-foreground">{catalog.intro}</p>}
       </div>
